@@ -25,7 +25,7 @@ async function getEvents(b) {
     e.value = null;
     console.log("Fetching events with params:", b);
 
-    const res = await axios.post("http://13.61.187.236:5000/api/events", b);
+    const res = await axios.post("https://retail.gondarmenu.com/api/events", b);
     console.log(res.data);
 
     e.value = res.data;
@@ -282,9 +282,12 @@ async function fetchEventDetail(id, i) {
   try {
     detailPending.value = true;
 
-    const res = await axios.post("http://13.61.187.236:5000/api/eventDetail", {
-      id: i,
-    });
+    const res = await axios.post(
+      "https://retail.gondarmenu.com/api/eventDetail",
+      {
+        id: i,
+      }
+    );
 
     eventDetail.value[id] = res.data;
     detailPending.value = false;
@@ -407,7 +410,7 @@ const handleCombos = async (
   const selection = comboHelper(typeToSend, eventId);
   // console.log(selection);
   const { data, pending, error } = await useFetch(
-    "http://13.61.187.236:5000/api/combo",
+    "https://retail.gondarmenu.com/api/combo",
     {
       method: "POST",
       body: [
@@ -533,7 +536,7 @@ function clearExpiredBets() {
 async function handlePlaceBet() {
   placingBet.value = true;
   const res = await axios.post(
-    "http://13.61.187.236:5000/api/placeBet",
+    "https://retail.gondarmenu.com/api/placeBet",
 
     selectedBets.value
   );
@@ -569,7 +572,7 @@ async function handleCancelTicket(id) {
   cancelTickets.value = [];
   cancleTicketMessage.value = null;
   try {
-    const res = await axios.post("http://13.61.187.236:5000/api/cancel", {
+    const res = await axios.post("https://retail.gondarmenu.com/api/cancel", {
       ticketId: id,
     });
 
@@ -591,7 +594,7 @@ async function proceedCancelTicket() {
     cancelTicketLoader.value = true;
 
     const response = await axios.post(
-      "http://13.61.187.236:5000/api/cancelBet",
+      "https://retail.gondarmenu.com/api/cancelBet",
       {
         ticketID: cancelTicketId.value,
       }
@@ -614,7 +617,7 @@ async function handleRedeemTicket(id) {
   redeemTicket.value = [];
   redeemTicketMessage.value = null;
   try {
-    const res = await axios.post("http://13.61.187.236:5000/api/redeem", {
+    const res = await axios.post("https://retail.gondarmenu.com/api/redeem", {
       ticketId: id,
     });
 
@@ -640,7 +643,7 @@ async function proceedRedeemTicket(winners) {
     redeemTicketLoader.value = true;
 
     const response = await axios.post(
-      "http://13.61.187.236:5000/api/redeemBet",
+      "https://retail.gondarmenu.com/api/redeemBet",
       {
         ticketID: redeemTicketId.value,
         winners,
@@ -668,7 +671,10 @@ async function checkPrinterIsOnline() {
 }
 
 async function getBalance(username) {
-  const res = await axios.post("http://13.61.187.236:5000/api/getBalance", {});
+  const res = await axios.post(
+    "https://retail.gondarmenu.com/api/getBalance",
+    {}
+  );
   balance.value = res.data.totalAmount;
 }
 
@@ -676,7 +682,7 @@ async function getBalanceData(username) {
   balanceDataLoader.value = true;
   balanceData.value = [];
   const res = await axios.post(
-    "http://13.61.187.236:5000/api/getBalanceData",
+    "https://retail.gondarmenu.com/api/getBalanceData",
     {}
   );
 
@@ -690,7 +696,10 @@ async function getBalanceData(username) {
 
 async function getRecallBets(username) {
   recallBetLoader.value = ref(true);
-  const res = await axios.post("http://13.61.187.236:5000/api/recallBets", {});
+  const res = await axios.post(
+    "https://retail.gondarmenu.com/api/recallBets",
+    {}
+  );
 
   recallBets.value = res.data;
   setTimeout(() => {
@@ -699,7 +708,7 @@ async function getRecallBets(username) {
 }
 
 async function handleCopyTicket(id) {
-  const res = await axios.post("http://13.61.187.236:5000/api/copyPrint", {
+  const res = await axios.post("https://retail.gondarmenu.com/api/copyPrint", {
     ticketId: id,
   });
 
@@ -709,9 +718,12 @@ async function handleCopyTicket(id) {
 
 async function printZReport(day) {
   try {
-    const res = await axios.post("http://13.61.187.236:5000/api/printZReport", {
-      day,
-    });
+    const res = await axios.post(
+      "https://retail.gondarmenu.com/api/printZReport",
+      {
+        day,
+      }
+    );
 
     if (res.data.success) {
       printBet(res.data.data);
