@@ -409,27 +409,17 @@ const handleCombos = async (
   detailPending.value = true;
   const selection = comboHelper(typeToSend, eventId);
   // console.log(selection);
-  const { data, pending, error } = await useFetch(
-    "https://retail.gondarmenu.com/api/combo",
+  const res = await axios.post("https://retail.gondarmenu.com/api/combo", [
     {
-      method: "POST",
-      body: [
-        {
-          ID: 3,
-          FeedEventId: Id,
-          EventTypeValue: eventValue,
-          MarketClassValue: marketValue,
-          MarketClassName: "type",
-          SelectionIds: selection,
-        },
-      ],
-    }
-  );
-  if (error.value) {
-    console.error("API call failed:", error.value);
-    detailPending.value = true;
-    return;
-  }
+      ID: 3,
+      FeedEventId: Id,
+      EventTypeValue: eventValue,
+      MarketClassValue: marketValue,
+      MarketClassName: "type",
+      SelectionIds: selection,
+    },
+  ]);
+  const data = ref(res.data);
 
   // console.log(data.value.data[0]);
 
