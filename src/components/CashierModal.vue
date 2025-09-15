@@ -12,6 +12,7 @@ import DateTimePicker from "./DateTimePicker.vue";
 import PrintIcon from "./PrintIcon.vue";
 import RefreshButton from "./RefreshButton.vue";
 import CloseIcon from "./CloseIcon.vue";
+import EyeIcon from "./EyeIcon.vue";
 
 const props = defineProps({
   showCashierModal: { type: Boolean, default: false },
@@ -2286,45 +2287,10 @@ onBeforeUnmount(() => {
                     {{ formatMSDate(b.StartTime) }}
                   </td>
                   <td class="px-4 py-2 text-left font-medium border-r truncate">
-                    <div
-                      class="border border-[#37b34a] rounded px-1.5 py-2.5] cursor-pointer hover:bg-[#F0FAF2] py-1 w-[70px] flex justify-center bg-white"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 200 120"
-                        width="24"
-                        height="24"
-                      >
-                        <path
-                          d="M10 60 C40 10, 160 10, 190 60 C160 110, 40 110, 10 60 Z"
-                          fill="#fff"
-                          stroke="#53ca65"
-                          stroke-width="14"
-                        />
-                        <circle cx="100" cy="60" r="40" fill="#53ca65" />
-                        <circle cx="92" cy="52" r="10" fill="#fff" />
-                      </svg>
-                    </div>
+                    <EyeIcon />
                   </td>
                   <td class="px-4 py-2 text-left font-medium border-r truncate">
-                    <div
-                      @click="$emit('copyTicket', b.ticketId)"
-                      class="border border-[#37b34a] rounded px-1.5 py-2.5] cursor-pointer hover:bg-[#F0FAF2] py-1 w-[70px] flex justify-center bg-white"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        fill="#37b34a"
-                        class="bi bi-printer"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
-                        <path
-                          d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1"
-                        />
-                      </svg>
-                    </div>
+                    <PrintIcon @click="$emit('copyTicket', b.ticketId)" />
                   </td>
                 </tr>
               </tbody>
