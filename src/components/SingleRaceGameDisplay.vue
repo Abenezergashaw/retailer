@@ -2,6 +2,7 @@
 import { ref, computed, watch } from "vue";
 import LockIcon from "./LockIcon.vue";
 import ComboBox from "./ComboBox.vue";
+import Rating from "./Rating.vue";
 const props = defineProps({
   eventDetail: {
     type: Object,

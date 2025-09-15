@@ -40,6 +40,7 @@ getEvents({ name: "PlatinumHounds", feedId: 12 });
 
 import { useFolderImages } from "../composables/useFolderImages";
 import DisplayIcons from "@/components/DisplayIcons.vue";
+import AllGamesDisplay from "@/components/AllGamesDisplay.vue";
 let i = null;
 const { images } = useFolderImages("GreyhoundJackets");
 
@@ -136,6 +137,8 @@ const balance = ref(0);
 const balanceDataLoader = ref(false);
 const recallBets = ref([]);
 const recallBetLoader = ref(false);
+
+const showGamesDisplay = ref(true);
 
 const gamesList = ref([
   // {
@@ -857,7 +860,13 @@ onMounted(async () => {
       </div>
     </div>
   </div>
-
+  <!-- <div v-for="games in gamesList">
+    <AllGamesDisplay
+      :games="games"
+      :current="betSlipICon"
+      @gameChnage="handleGameChange"
+    />
+  </div> -->
   <div class="flex flex-col custom:flex-row w-full">
     <div class="custom:w-3/4 w-full px-0.5">
       <div class="flex justify-between items-center mb-4 mt-1">
