@@ -10,8 +10,8 @@ const auth = useAuthStore();
 
 const router = useRouter();
 
-const username = ref("asd");
-const password = ref("zxc");
+const username = ref("");
+const password = ref("");
 const generalError = ref(false);
 const passwordError = ref(false);
 const usernameError = ref(false);
