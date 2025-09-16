@@ -47,7 +47,7 @@ async function login() {
     formData.append("submit", "Enter");
 
     const response = await axios.post(
-      "http://localhost:5000/RetailUser/Login",
+      "https://retailer-nine.vercel.app/RetailUser/Login",
       // {
       formData,
       {
@@ -68,9 +68,12 @@ async function login() {
 }
 
 async function checkSession() {
-  const res = await axios.get("http://localhost:5000/api/check-session", {
-    withCredentials: true,
-  });
+  const res = await axios.get(
+    "https://retailer-nine.vercel.app/api/check-session",
+    {
+      withCredentials: true,
+    }
+  );
   console.log("Session check response:", res.data);
   if (res.data.loggedIn) {
     router.push("/");
