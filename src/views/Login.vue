@@ -59,6 +59,7 @@ async function login() {
     );
 
     console.log("Login response:", response.data.message);
+    await auth.checkSession();
     router.push("/");
   } catch (error) {
     // console.error("Login failed:", error);
