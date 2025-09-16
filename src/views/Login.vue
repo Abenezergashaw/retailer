@@ -47,7 +47,7 @@ async function login() {
     formData.append("submit", "Enter");
 
     const response = await axios.post(
-      "https://retailer-nine.vercel.app/RetailUser/Login",
+      "https://retail.gondarmenu.com/RetailUser/Login",
       // {
       formData,
       {
