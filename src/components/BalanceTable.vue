@@ -5,6 +5,9 @@ const props = defineProps({
   balanceData: Array,
   balanceDataLoader: Boolean,
 });
+import { useAuthStore } from "@/store/auth";
+
+const auth = useAuthStore();
 
 const totals = computed(() =>
   Object.values(
@@ -77,7 +80,9 @@ const selectedData = ref(null);
           <td class="px-4 py-2 truncate">
             <PrintIcon @click="$emit('printZReport', data.date)" />
           </td>
-          <td class="px-4 py-2 truncate">NB2.cashier2</td>
+          <td class="px-4 py-2 truncate">
+            {{ auth?.user?.user }}.{{ auth?.user?.cashier }}
+          </td>
           <td class="px-4 py-2 truncate">{{ data.date }} 00:00:00</td>
           <td class="px-4 py-2 truncate">{{ data.date }} 23:59:59</td>
           <td class="px-4 py-2 text-left truncate">Br 0.00</td>

@@ -3,6 +3,7 @@ import BasicGameInfo from "@/components/BasicGameInfo.vue";
 import SingleRaceGameDisplay from "@/components/SingleRaceGameDisplay.vue";
 import Betslip from "@/components/Betslip.vue";
 import { ref, watch, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import CashierModal from "@/components/CashierModal.vue";
 import RedeemModal from "@/components/RedeemModal.vue";
 import CancelModal from "@/components/CancelModal.vue";
@@ -10,9 +11,11 @@ import PrinterCheckModal from "@/components/PrinterCheckModal.vue";
 import OptionButtons from "@/components/OptionButtons.vue";
 import MainIcons from "@/components/MainIcons.vue";
 import axios from "axios";
-// useHead({
-//   title: "BetMan Online Retail",
-// });
+import { useAuthStore } from "@/store/auth";
+
+const auth = useAuthStore();
+
+const router = useRouter();
 
 const showModal = ref(false);
 
@@ -528,11 +531,11 @@ function clearExpiredBets() {
 
 async function handlePlaceBet() {
   placingBet.value = true;
-  const res = await axios.post(
-    "https://retail.gondarmenu.com/api/placeBet",
-
-    selectedBets.value
-  );
+  const res = await axios.post("https://retail.gondarmenu.com/api/placeBet", {
+    selectedBets: selectedBets.value,
+    username: auth?.user?.user,
+    cashier: auth?.user?.cashier,
+  });
 
   // console.log(data)
 
@@ -664,10 +667,10 @@ async function checkPrinterIsOnline() {
 }
 
 async function getBalance(username) {
-  const res = await axios.post(
-    "https://retail.gondarmenu.com/api/getBalance",
-    {}
-  );
+  const res = await axios.post("https://retail.gondarmenu.com/api/getBalance", {
+    username: auth?.user?.user,
+    cashier: auth?.user?.cashier,
+  });
   balance.value = res.data.totalAmount;
 }
 
@@ -676,7 +679,10 @@ async function getBalanceData(username) {
   balanceData.value = [];
   const res = await axios.post(
     "https://retail.gondarmenu.com/api/getBalanceData",
-    {}
+    {
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
+    }
   );
 
   balanceData.value = res.data;
@@ -689,10 +695,10 @@ async function getBalanceData(username) {
 
 async function getRecallBets(username) {
   recallBetLoader.value = ref(true);
-  const res = await axios.post(
-    "https://retail.gondarmenu.com/api/recallBets",
-    {}
-  );
+  const res = await axios.post("https://retail.gondarmenu.com/api/recallBets", {
+    username: auth?.user?.user,
+    cashier: auth?.user?.cashier,
+  });
 
   recallBets.value = res.data;
   setTimeout(() => {
@@ -715,6 +721,8 @@ async function printZReport(day) {
       "https://retail.gondarmenu.com/api/printZReport",
       {
         day,
+        username: auth?.user?.user,
+        cashier: auth?.user?.cashier,
       }
     );
 
@@ -727,8 +735,27 @@ async function printZReport(day) {
   console.log("z-report");
 }
 
+async function checkSession() {
+  const res = await axios.get("http://localhost:5000/api/check-session", {
+    withCredentials: true,
+  });
+  console.log("+++++*******%%%%%%%", res.data);
+  if (!res.data.loggedIn) {
+    router.push("/RetailUser/Login");
+  }
+}
+
+function handleLogout() {
+  auth.logout();
+}
+
 onMounted(async () => {
   await checkPrinterIsOnline();
+  const ok = await auth.checkSession();
+  if (!ok) {
+    router.push("/RetailUser/Login");
+  }
+  console.log(auth.user, "asdhjkasdashdk");
 });
 </script>
 
@@ -851,9 +878,12 @@ onMounted(async () => {
     </div>
     <div class="flex gap-2 items-center h-full">
       <div class="font-roboto text-sm text-[#727272]">
-        62 bw62 Cashier5 (62bw62.cashier5)
+        {{ auth?.user?.user }} {{ auth?.user?.cashier }} ({{
+          auth?.user?.username
+        }})
       </div>
       <div
+        @click="handleLogout"
         class="font-roboto text-[#37b34a] hover:bg-[#eee] hover:text-[#2f5b83] cursor-pointer h-full flex items-center px-3 text-sm relative z-10"
       >
         <button>Logout</button>
@@ -938,6 +968,10 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+html,
+body {
+  overflow-y: scroll;
+}
 .custom-scroll::-webkit-scrollbar {
   width: 8px;
 }
