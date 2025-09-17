@@ -87,7 +87,7 @@ onMounted(async () => {
   // checkSession();
   const ok = await auth.checkSession();
   if (ok) {
-    router.push({ name: "Home" }); // already logged in → go home
+    router.push("/");
   }
 });
 </script>
