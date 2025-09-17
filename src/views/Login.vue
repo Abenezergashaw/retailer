@@ -47,7 +47,7 @@ async function login() {
     formData.append("submit", "Enter");
 
     const response = await axios.post(
-      "https://retail.gondarmenu.com/RetailUser/Login",
+      "/api/RetailUser/Login",
       // {
       formData,
       {

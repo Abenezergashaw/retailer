@@ -11,12 +11,9 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async checkSession() {
       try {
-        const res = await axios.get(
-          "https://retail.gondarmenu.com/api/check-session",
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get("/api/api/check-session", {
+          withCredentials: true,
+        });
         if (res.data.loggedIn) {
           this.user = res.data.user;
           console.log(this.user);
@@ -31,7 +28,7 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
-      await axios.get("https://retail.gondarmenu.com/api/logout", {
+      await axios.get("/api/api/logout", {
         withCredentials: true,
       });
       router.push("/RetailUser/Login");
