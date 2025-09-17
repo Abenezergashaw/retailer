@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script setup>
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import CloseIcon from "@/components/CloseIcon.vue";
 import ErrorIcon from "@/components/ErrorIcon.vue";
 import axios from "axios";
@@ -11,6 +11,7 @@ const auth = useAuthStore();
 const url = useUrl();
 
 const router = useRouter();
+const route = useRoute();
 
 const username = ref("");
 const password = ref("");
@@ -22,6 +23,13 @@ const passwordErrorMessage = ref("");
 const generalErrorMessage = ref("");
 const returnUrl = "/";
 const token = "";
+
+console.log(route.query);
+
+if (route.query.msg) {
+  generalError.value = true;
+  generalErrorMessage.value = route.query.msg;
+}
 
 async function login() {
   try {
@@ -84,11 +92,11 @@ async function checkSession() {
 }
 
 onMounted(async () => {
-  // checkSession();
   const ok = await auth.checkSession();
   if (ok) {
     router.push("/");
   }
+  // checkSession();
 });
 </script>
 
@@ -108,14 +116,14 @@ onMounted(async () => {
             method="post"
             @submit.prevent="login"
             novalidate
-            class="w-full max-w-sm bg-white rounded-[20px] p-1"
+            class="w-full bg-white rounded-[20px] p-1"
           >
             <!-- Hidden fields -->
             <input type="hidden" id="ReturnUrl" name="ReturnUrl" value="/" />
             <input type="hidden" id="Token" name="Token" value="" />
 
             <!-- Heading -->
-            <div class="mb-2 text-center">
+            <div class="mb-3 text-center">
               <h2
                 class="text-[1.7em] px-[15px] pt-[10px] text-[#37b34a] font-roboto"
               >
@@ -134,7 +142,7 @@ onMounted(async () => {
             >
               <div
                 v-if="generalError"
-                class="w-full flex justify-center mb-3 px-1 relative"
+                class="flex justify-center mb-3 px-1 relative"
               >
                 <div
                   class="text-sm bg-gradient-to-b from-[#E4716F] to-[#DB4240] text-white px-2 py-[7px] rounded-[3px] border border-[#db4240] font-roboto w-full flex justify-center items-center gap-2"
@@ -150,7 +158,7 @@ onMounted(async () => {
             </transition>
 
             <!-- Username -->
-            <div class="mb-4 flex flex-col items-end">
+            <div class="mb-4 flex flex-col items-center">
               <input
                 id="Username"
                 name="Username"
@@ -158,7 +166,7 @@ onMounted(async () => {
                 placeholder="Username"
                 v-model="username"
                 required
-                class="w-[94%] rounded-[5px] border-[0.5px] border-[#37b34a] px-[3%] text-[.9em] h-[32px] font-roboto text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#101010] focus:border-none outline-none placeholder-gray-500"
+                class="w-[185px] rounded-[5px] border-[0.5px] border-[#37b34a] px-[3%] text-[.9em] h-[32px] font-roboto text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#101010] focus:border-none outline-none placeholder-gray-500"
               />
             </div>
             <div v-if="usernameError" class="w-full flex justify-center">
@@ -169,7 +177,7 @@ onMounted(async () => {
               </span>
             </div>
             <!-- Password -->
-            <div class="mb-3 flex flex-col items-end">
+            <div class="mb-3 flex flex-col items-center">
               <input
                 id="Password"
                 name="Password"
@@ -177,7 +185,7 @@ onMounted(async () => {
                 placeholder="Password"
                 v-model="password"
                 required
-                class="w-[94%] rounded-[5px] border-[0.5px] border-[#37b34a] px-[3%] text-[.9em] h-[32px] font-roboto text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#101010] focus:border-none outline-none placeholder-gray-500"
+                class="w-[185px] rounded-[5px] border-[0.5px] border-[#37b34a] px-[3%] text-[.9em] h-[32px] font-roboto text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#101010] focus:border-none outline-none placeholder-gray-500"
               />
             </div>
             <div v-if="passwordError" class="w-full flex justify-center">

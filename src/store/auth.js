@@ -17,6 +17,16 @@ export const useAuthStore = defineStore("auth", {
         const res = await axios.get(`${url.url}/api/check-session`, {
           withCredentials: true,
         });
+
+        if (res.data.expired) {
+          console.log("expired");
+          router.push({
+            path: "/RetailUser/Login",
+            query: { msg: res.data.message },
+          });
+          return;
+        }
+
         if (res.data.loggedIn) {
           this.user = res.data.user;
           console.log(this.user);

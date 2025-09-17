@@ -56,9 +56,12 @@ const betPlacedSuccess = ref(false);
 const isKeno = ref(false);
 
 const betSlipICon = ref("PlatinumHounds");
-const selectedGame = ref({});
+const selectedGame = ref("PlatinumHounds");
 
 async function handleGameChange(game, isFinshed) {
+  selectedGame.value = betSlipICon.value;
+  betSlipICon.value = game.searchName;
+
   if (isFinshed) {
     console.log("isFinshed", isFinshed);
     e.value = null;
@@ -71,7 +74,7 @@ async function handleGameChange(game, isFinshed) {
       feedId: game.feedId,
     });
   } else {
-    if (betSlipICon.value !== game.searchName) {
+    if (selectedGame.value !== game.searchName) {
       console.log(true);
       e.value = null;
       selectedBets.value = [];
@@ -103,8 +106,6 @@ async function handleGameChange(game, isFinshed) {
   } else if (game.searchName === "CycleRacing") {
     i = "CyclistHelmets";
   }
-
-  betSlipICon.value = game.searchName;
   const { images } = useFolderImages(i);
   imageDir.value = images.value;
 }
@@ -530,13 +531,27 @@ function clearExpiredBets() {
 
 async function handlePlaceBet() {
   placingBet.value = true;
-  const res = await axios.post(`${url.url}/api/placeBet`, {
-    selectedBets: selectedBets.value,
-    username: auth?.user?.user,
-    cashier: auth?.user?.cashier,
-  });
+  const res = await axios.post(
+    `${url.url}/api/placeBet`,
+    {
+      selectedBets: selectedBets.value,
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
+    },
+    {
+      withCredentials: true,
+    }
+  );
 
   // console.log(data)
+
+  if (res.data.expired) {
+    router.push({
+      path: "/RetailUser/Login",
+      query: { msg: res.data.message },
+    });
+    return;
+  }
 
   if (res.data.success) {
     placingBet.value = false;
