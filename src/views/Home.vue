@@ -28,7 +28,7 @@ async function getEvents(b) {
     e.value = null;
     console.log("Fetching events with params:", b);
 
-    const res = await axios.post("https://retail.gondarmenu.com/api/events", b);
+    const res = await axios.post("/api/api/events", b);
     console.log(res.data);
 
     e.value = res.data;
@@ -288,12 +288,9 @@ async function fetchEventDetail(id, i) {
   try {
     detailPending.value = true;
 
-    const res = await axios.post(
-      "https://retail.gondarmenu.com/api/eventDetail",
-      {
-        id: i,
-      }
-    );
+    const res = await axios.post("/api/api/eventDetail", {
+      id: i,
+    });
 
     eventDetail.value[id] = res.data;
     detailPending.value = false;
@@ -415,7 +412,7 @@ const handleCombos = async (
   detailPending.value = true;
   const selection = comboHelper(typeToSend, eventId);
   // console.log(selection);
-  const res = await axios.post("https://retail.gondarmenu.com/api/combo", [
+  const res = await axios.post("/api/api/combo", [
     {
       ID: 3,
       FeedEventId: Id,
@@ -531,7 +528,7 @@ function clearExpiredBets() {
 
 async function handlePlaceBet() {
   placingBet.value = true;
-  const res = await axios.post("https://retail.gondarmenu.com/api/placeBet", {
+  const res = await axios.post("/api/api/placeBet", {
     selectedBets: selectedBets.value,
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
@@ -568,7 +565,7 @@ async function handleCancelTicket(id) {
   cancelTickets.value = [];
   cancleTicketMessage.value = null;
   try {
-    const res = await axios.post("https://retail.gondarmenu.com/api/cancel", {
+    const res = await axios.post("/api/api/cancel", {
       ticketId: id,
     });
 
@@ -589,12 +586,9 @@ async function proceedCancelTicket() {
   try {
     cancelTicketLoader.value = true;
 
-    const response = await axios.post(
-      "https://retail.gondarmenu.com/api/cancelBet",
-      {
-        ticketID: cancelTicketId.value,
-      }
-    );
+    const response = await axios.post("/api/api/cancelBet", {
+      ticketID: cancelTicketId.value,
+    });
 
     if (response.data.success) {
       cancelTicketLoader.value = false;
@@ -613,7 +607,7 @@ async function handleRedeemTicket(id) {
   redeemTicket.value = [];
   redeemTicketMessage.value = null;
   try {
-    const res = await axios.post("https://retail.gondarmenu.com/api/redeem", {
+    const res = await axios.post("/api/api/redeem", {
       ticketId: id,
     });
 
@@ -638,13 +632,10 @@ async function proceedRedeemTicket(winners) {
   try {
     redeemTicketLoader.value = true;
 
-    const response = await axios.post(
-      "https://retail.gondarmenu.com/api/redeemBet",
-      {
-        ticketID: redeemTicketId.value,
-        winners,
-      }
-    );
+    const response = await axios.post("/api/api/redeemBet", {
+      ticketID: redeemTicketId.value,
+      winners,
+    });
 
     if (response.data.success) {
       redeemTicketLoader.value = false;
@@ -667,7 +658,7 @@ async function checkPrinterIsOnline() {
 }
 
 async function getBalance(username) {
-  const res = await axios.post("https://retail.gondarmenu.com/api/getBalance", {
+  const res = await axios.post("/api/api/getBalance", {
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
   });
@@ -677,13 +668,10 @@ async function getBalance(username) {
 async function getBalanceData(username) {
   balanceDataLoader.value = true;
   balanceData.value = [];
-  const res = await axios.post(
-    "https://retail.gondarmenu.com/api/getBalanceData",
-    {
-      username: auth?.user?.user,
-      cashier: auth?.user?.cashier,
-    }
-  );
+  const res = await axios.post("/api/api/getBalanceData", {
+    username: auth?.user?.user,
+    cashier: auth?.user?.cashier,
+  });
 
   balanceData.value = res.data;
   console.log(balanceData.value);
@@ -695,7 +683,7 @@ async function getBalanceData(username) {
 
 async function getRecallBets(username) {
   recallBetLoader.value = ref(true);
-  const res = await axios.post("https://retail.gondarmenu.com/api/recallBets", {
+  const res = await axios.post("/api/api/recallBets", {
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
   });
@@ -707,7 +695,7 @@ async function getRecallBets(username) {
 }
 
 async function handleCopyTicket(id) {
-  const res = await axios.post("https://retail.gondarmenu.com/api/copyPrint", {
+  const res = await axios.post("/api/api/copyPrint", {
     ticketId: id,
   });
 
@@ -717,14 +705,11 @@ async function handleCopyTicket(id) {
 
 async function printZReport(day) {
   try {
-    const res = await axios.post(
-      "https://retail.gondarmenu.com/api/printZReport",
-      {
-        day,
-        username: auth?.user?.user,
-        cashier: auth?.user?.cashier,
-      }
-    );
+    const res = await axios.post("/api/api/printZReport", {
+      day,
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
+    });
 
     if (res.data.success) {
       printBet(res.data.data);
