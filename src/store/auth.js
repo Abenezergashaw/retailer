@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import router from "@/router";
+import { useUrl } from "./url";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -10,8 +11,10 @@ export const useAuthStore = defineStore("auth", {
   }),
   actions: {
     async checkSession() {
+      const url = useUrl();
+
       try {
-        const res = await axios.get("/api/api/check-session", {
+        const res = await axios.get(`${url.url}/api/check-session`, {
           withCredentials: true,
         });
         if (res.data.loggedIn) {
@@ -28,7 +31,9 @@ export const useAuthStore = defineStore("auth", {
     },
 
     async logout() {
-      await axios.get("/api/api/logout", {
+      const url = useUrl();
+
+      await axios.get(`${url.url}/api/logout`, {
         withCredentials: true,
       });
       router.push("/RetailUser/Login");

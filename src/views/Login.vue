@@ -5,8 +5,10 @@ import CloseIcon from "@/components/CloseIcon.vue";
 import ErrorIcon from "@/components/ErrorIcon.vue";
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
+import { useUrl } from "@/store/url";
 
 const auth = useAuthStore();
+const url = useUrl();
 
 const router = useRouter();
 
@@ -47,7 +49,7 @@ async function login() {
     formData.append("submit", "Enter");
 
     const response = await axios.post(
-      "/api/RetailUser/Login",
+      `${url.url}/RetailUser/Login`,
       // {
       formData,
       {

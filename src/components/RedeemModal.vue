@@ -17,7 +17,7 @@ const props = defineProps({
   title: { type: String, default: "Modal Title" },
   redeemTicket: {
     type: Object,
-    default: { rows: [], numbers: [] },
+    default: { rows: [], numbers: [], PlacePaysOn: null },
   },
   redeemTicketLoader: Boolean,
   redeemTicketMessage: String,
@@ -37,6 +37,8 @@ const inputRef = ref(null);
 
 const ticketId = ref("");
 
+console.log(props.redeemTicket, "-----");
+
 let winners = [];
 const totalWin = computed(() => {
   return props.redeemTicket.rows.reduce((acc, bet) => {
@@ -45,15 +47,81 @@ const totalWin = computed(() => {
         return acc + bet.stake * bet.odd;
       }
     } else if (bet.betType === "Place") {
+      console.log(props.redeemTicket.PlacePaysOn, "sadasdas");
+
+      if (props.redeemTicket.PlacePaysOn == 3) {
+        if (
+          props.redeemTicket.numbers[0] === String(bet.number) ||
+          props.redeemTicket.numbers[1] === String(bet.number) ||
+          props.redeemTicket.numbers[2] === String(bet.number)
+        ) {
+          return acc + bet.stake * bet.odd;
+        }
+      } else if (props.redeemTicket.PlacePaysOn == 2) {
+        if (
+          props.redeemTicket.numbers[0] === String(bet.number) ||
+          props.redeemTicket.numbers[1] === String(bet.number)
+        ) {
+          return acc + bet.stake * bet.odd;
+        }
+      }
+    } else if (bet.betType === "1st Two Any Order") {
+      const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+      const formatted2 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+
+      if (formatted1 === bet.name || formatted2 === bet.name) {
+        return acc + bet.stake * bet.odd;
+      }
+    } else if (bet.betType === "Swinger") {
+      const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+      const formatted2 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}]`;
+      const formatted3 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+      const formatted4 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}]`;
+      const formatted5 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}]`;
+      const formatted6 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}]`;
+
       if (
-        props.redeemTicket.numbers[0] === String(bet.number) ||
-        props.redeemTicket.numbers[1] === String(bet.number) ||
-        props.redeemTicket.numbers[2] === String(bet.number)
+        formatted1 === bet.name ||
+        formatted2 === bet.name ||
+        formatted3 === bet.name ||
+        formatted4 === bet.name ||
+        formatted5 === bet.name ||
+        formatted6 === bet.name
+      ) {
+        return acc + bet.stake * bet.odd;
+      }
+    } else if (bet.betType === "1st Two In Order") {
+      const formatted = `[${props.redeemTicket.numbers[0]}/${props.redeemTicket.numbers[1]}]`;
+
+      if (formatted === bet.name) {
+        return acc + bet.stake * bet.odd;
+      }
+    } else if (bet.betType === "1st Three In Order") {
+      const formatted = `[${props.redeemTicket.numbers[0]}/${props.redeemTicket.numbers[1]}/${props.redeemTicket.numbers[2]}]`;
+
+      if (formatted === bet.name) {
+        return acc + bet.stake * bet.odd;
+      }
+    } else if (bet.betType === "1st Three Any Order") {
+      const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}]`;
+      const formatted2 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}]`;
+      const formatted3 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}]`;
+      const formatted4 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}]`;
+      const formatted5 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+      const formatted6 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+
+      if (
+        formatted1 === bet.name ||
+        formatted2 === bet.name ||
+        formatted3 === bet.name ||
+        formatted4 === bet.name ||
+        formatted5 === bet.name ||
+        formatted6 === bet.name
       ) {
         return acc + bet.stake * bet.odd;
       }
     }
-    return acc; // skip others
+    return acc;
   }, 0);
 });
 
@@ -152,18 +220,96 @@ function winCheckHelper(t) {
       ? (t.stake * t.odd).toFixed(2)
       : 0;
   } else if (t.betType === "Place") {
+    if (props.redeemTicket.PlacePaysOn === 3) {
+      if (
+        String(t.number) === props.redeemTicket.numbers[0] ||
+        String(t.number) === props.redeemTicket.numbers[1] ||
+        String(t.number) === props.redeemTicket.numbers[2]
+      ) {
+        winners.push(t.singleId);
+      }
+      return String(t.number) === props.redeemTicket.numbers[0] ||
+        String(t.number) === props.redeemTicket.numbers[1] ||
+        String(t.number) === props.redeemTicket.numbers[2]
+        ? (t.stake * t.odd).toFixed(2)
+        : 0;
+    } else {
+      if (
+        String(t.number) === props.redeemTicket.numbers[0] ||
+        String(t.number) === props.redeemTicket.numbers[1]
+      ) {
+        winners.push(t.singleId);
+      }
+      return String(t.number) === props.redeemTicket.numbers[0] ||
+        String(t.number) === props.redeemTicket.numbers[1]
+        ? (t.stake * t.odd).toFixed(2)
+        : 0;
+    }
+  } else if (t.betType === "1st Two Any Order") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted2 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+
+    if (formatted1 === t.name || formatted2 === t.name) {
+      winners.push(t.singleId);
+      return (t.stake * t.odd).toFixed(2);
+    }
+    return 0;
+  } else if (t.betType === "Swinger") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted2 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted3 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+    const formatted4 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted5 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}]`;
+    const formatted6 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}]`;
+
     if (
-      String(t.number) === props.redeemTicket.numbers[0] ||
-      String(t.number) === props.redeemTicket.numbers[1] ||
-      String(t.number) === props.redeemTicket.numbers[2]
+      formatted1 === t.name ||
+      formatted2 === t.name ||
+      formatted3 === t.name ||
+      formatted4 === t.name ||
+      formatted5 === t.name ||
+      formatted6 === t.name
     ) {
       winners.push(t.singleId);
+      return (t.stake * t.odd).toFixed(2);
     }
-    return String(t.number) === props.redeemTicket.numbers[0] ||
-      String(t.number) === props.redeemTicket.numbers[1] ||
-      String(t.number) === props.redeemTicket.numbers[2]
-      ? (t.stake * t.odd).toFixed(2)
-      : 0;
+    return 0;
+  } else if (t.betType === "1st Two In Order") {
+    const formatted = `[${props.redeemTicket.numbers[0]}/${props.redeemTicket.numbers[1]}]`;
+
+    if (formatted === t.name) {
+      winners.push(t.singleId);
+      return (t.stake * t.odd).toFixed(2);
+    }
+    return 0;
+  } else if (t.betType === "1st Three In Order") {
+    const formatted = `[${props.redeemTicket.numbers[0]}/${props.redeemTicket.numbers[1]}/${props.redeemTicket.numbers[2]}]`;
+
+    if (formatted === t.name) {
+      winners.push(t.singleId);
+      return (t.stake * t.odd).toFixed(2);
+    }
+    return 0;
+  } else if (t.betType === "1st Three Any Order") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted2 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted3 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted4 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}]`;
+    const formatted5 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted6 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+
+    if (
+      formatted1 === t.name ||
+      formatted2 === t.name ||
+      formatted3 === t.name ||
+      formatted4 === t.name ||
+      formatted5 === t.name ||
+      formatted6 === t.name
+    ) {
+      winners.push(t.singleId);
+      return (t.stake * t.odd).toFixed(2);
+    }
+    return 0;
   }
 }
 
@@ -171,11 +317,80 @@ function bgHelper(t) {
   if (t.betType === "Win") {
     return String(t.number) === props.redeemTicket.numbers[0] ? 1 : 0;
   } else if (t.betType === "Place") {
-    return String(t.number) === props.redeemTicket.numbers[0] ||
-      String(t.number) === props.redeemTicket.numbers[1] ||
-      String(t.number) === props.redeemTicket.numbers[2]
-      ? 1
-      : 0;
+    if (props.redeemTicket.PlacePaysOn === 3) {
+      return String(t.number) === props.redeemTicket.numbers[0] ||
+        String(t.number) === props.redeemTicket.numbers[1] ||
+        String(t.number) === props.redeemTicket.numbers[2]
+        ? 1
+        : 0;
+    } else {
+      return String(t.number) === props.redeemTicket.numbers[0] ||
+        String(t.number) === props.redeemTicket.numbers[1]
+        ? 1
+        : 0;
+    }
+  } else if (t.betType === "1st Two Any Order") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted2 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+
+    if (formatted2 === t.name || formatted1 === t.name) {
+      return 1;
+    }
+    return 0;
+  } else if (t.betType === "Swinger") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted2 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted3 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+    const formatted4 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted5 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}]`;
+    const formatted6 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}]`;
+
+    if (
+      formatted1 === t.name ||
+      formatted2 === t.name ||
+      formatted3 === t.name ||
+      formatted4 === t.name ||
+      formatted5 === t.name ||
+      formatted6 === bet.name
+    ) {
+      return 1;
+    }
+    return 0;
+  } else if (t.betType === "1st Two In Order") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}/${props.redeemTicket.numbers[1]}]`;
+
+    if (formatted1 === t.name) {
+      return 1;
+    }
+    return 0;
+  } else if (t.betType === "1st Three In Order") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}/${props.redeemTicket.numbers[1]}/${props.redeemTicket.numbers[2]}]`;
+
+    if (formatted1 === t.name) {
+      return 1;
+    }
+    return 0;
+  } else if (t.betType === "1st Three Any Order") {
+    const formatted1 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}]`;
+    const formatted2 = `[${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted3 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[2]}]`;
+
+    const formatted4 = `[${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}]`;
+
+    const formatted5 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[0]}-${props.redeemTicket.numbers[1]}]`;
+    const formatted6 = `[${props.redeemTicket.numbers[2]}-${props.redeemTicket.numbers[1]}-${props.redeemTicket.numbers[0]}]`;
+
+    if (
+      formatted1 === t.name ||
+      formatted2 === t.name ||
+      formatted3 === t.name ||
+      formatted4 === t.name ||
+      formatted5 === t.name ||
+      formatted6 === t.name
+    ) {
+      return 1;
+    }
+    return 0;
   }
 }
 

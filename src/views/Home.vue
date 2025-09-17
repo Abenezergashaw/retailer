@@ -12,8 +12,10 @@ import OptionButtons from "@/components/OptionButtons.vue";
 import MainIcons from "@/components/MainIcons.vue";
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
+import { useUrl } from "@/store/url";
 
 const auth = useAuthStore();
+const url = useUrl();
 
 const router = useRouter();
 
@@ -28,7 +30,7 @@ async function getEvents(b) {
     e.value = null;
     console.log("Fetching events with params:", b);
 
-    const res = await axios.post("/api/api/events", b);
+    const res = await axios.post(`${url.url}/api/events`, b);
     console.log(res.data);
 
     e.value = res.data;
@@ -127,7 +129,7 @@ const cancelTicketId = ref(null);
 const cannotCancelTicket = ref(false);
 
 const showRedeem = ref(false);
-const redeemTicket = ref({ rows: [], numbers: [] });
+const redeemTicket = ref({ rows: [], numbers: [], placePaysOn: null });
 const redeemTicketLoader = ref(false);
 const redeemTicketMessage = ref(null);
 const ticketRedeemedSuccess = ref(false);
@@ -288,7 +290,7 @@ async function fetchEventDetail(id, i) {
   try {
     detailPending.value = true;
 
-    const res = await axios.post("/api/api/eventDetail", {
+    const res = await axios.post(`${url.url}/api/eventDetail`, {
       id: i,
     });
 
@@ -412,7 +414,7 @@ const handleCombos = async (
   detailPending.value = true;
   const selection = comboHelper(typeToSend, eventId);
   // console.log(selection);
-  const res = await axios.post("/api/api/combo", [
+  const res = await axios.post(`${url.url}/api/combo`, [
     {
       ID: 3,
       FeedEventId: Id,
@@ -430,7 +432,7 @@ const handleCombos = async (
     id: eventId,
     betType: displayDesc,
     name: data.value.data[0].MaxNotation,
-    odd: 12.62,
+    odd: data.value.data[0].MaxOdds,
     date: "2025/09/02 11:56:00",
     gameId,
     longId: Id,
@@ -528,7 +530,7 @@ function clearExpiredBets() {
 
 async function handlePlaceBet() {
   placingBet.value = true;
-  const res = await axios.post("/api/api/placeBet", {
+  const res = await axios.post(`${url.url}/api/placeBet`, {
     selectedBets: selectedBets.value,
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
@@ -565,8 +567,10 @@ async function handleCancelTicket(id) {
   cancelTickets.value = [];
   cancleTicketMessage.value = null;
   try {
-    const res = await axios.post("/api/api/cancel", {
+    const res = await axios.post(`${url.url}/api/cancel`, {
       ticketId: id,
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
     });
 
     if (res.data.success) {
@@ -586,7 +590,7 @@ async function proceedCancelTicket() {
   try {
     cancelTicketLoader.value = true;
 
-    const response = await axios.post("/api/api/cancelBet", {
+    const response = await axios.post(`${url.url}/api/cancelBet`, {
       ticketID: cancelTicketId.value,
     });
 
@@ -607,8 +611,10 @@ async function handleRedeemTicket(id) {
   redeemTicket.value = [];
   redeemTicketMessage.value = null;
   try {
-    const res = await axios.post("/api/api/redeem", {
+    const res = await axios.post(`${url.url}/api/redeem`, {
       ticketId: id,
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
     });
 
     if (res.data.success) {
@@ -632,7 +638,7 @@ async function proceedRedeemTicket(winners) {
   try {
     redeemTicketLoader.value = true;
 
-    const response = await axios.post("/api/api/redeemBet", {
+    const response = await axios.post(`${url.url}/api/redeemBet`, {
       ticketID: redeemTicketId.value,
       winners,
     });
@@ -640,7 +646,7 @@ async function proceedRedeemTicket(winners) {
     if (response.data.success) {
       redeemTicketLoader.value = false;
       ticketRedeemedSuccess.value = true;
-      redeemTicket.value = { rows: [], numbers: [] };
+      redeemTicket.value = { rows: [], numbers: [], placePaysOn: null };
     }
   } catch (error) {
     console.log(error);
@@ -658,7 +664,7 @@ async function checkPrinterIsOnline() {
 }
 
 async function getBalance(username) {
-  const res = await axios.post("/api/api/getBalance", {
+  const res = await axios.post(`${url.url}/api/getBalance`, {
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
   });
@@ -668,7 +674,7 @@ async function getBalance(username) {
 async function getBalanceData(username) {
   balanceDataLoader.value = true;
   balanceData.value = [];
-  const res = await axios.post("/api/api/getBalanceData", {
+  const res = await axios.post(`${url.url}/api/getBalanceData`, {
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
   });
@@ -683,7 +689,7 @@ async function getBalanceData(username) {
 
 async function getRecallBets(username) {
   recallBetLoader.value = ref(true);
-  const res = await axios.post("/api/api/recallBets", {
+  const res = await axios.post(`${url.url}/api/recallBets`, {
     username: auth?.user?.user,
     cashier: auth?.user?.cashier,
   });
@@ -695,8 +701,10 @@ async function getRecallBets(username) {
 }
 
 async function handleCopyTicket(id) {
-  const res = await axios.post("/api/api/copyPrint", {
+  const res = await axios.post(`${url.url}/api/copyPrint`, {
     ticketId: id,
+    username: auth?.user?.user,
+    cashier: auth?.user?.cashier,
   });
 
   // console.log(res);
@@ -705,7 +713,7 @@ async function handleCopyTicket(id) {
 
 async function printZReport(day) {
   try {
-    const res = await axios.post("/api/api/printZReport", {
+    const res = await axios.post(`${url.url}/api/printZReport`, {
       day,
       username: auth?.user?.user,
       cashier: auth?.user?.cashier,
@@ -898,10 +906,7 @@ onMounted(async () => {
           </div>
         </div>
         <DisplayIcons :current="betSlipICon" />
-        <div
-          @click="e = null"
-          class="hover:text-[#37B34A] text-[#8c8c8c] cursor-pointer mr-1.5"
-        >
+        <div class="hover:text-[#37B34A] text-[#8c8c8c] cursor-pointer mr-1.5">
           <i class="material-icons cursor-pointer text-3xl" id="help-icon"
             >help</i
           >
