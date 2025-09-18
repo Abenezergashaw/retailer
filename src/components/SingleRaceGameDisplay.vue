@@ -1932,35 +1932,13 @@ const handleComboButtonClicked = (type) => {
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          fill="currentColor"
+          class="bi bi-trash-fill"
+          viewBox="0 0 16 16"
         >
-          <!-- Lid handle -->
-          <path d="M9 3h6" stroke="currentColor" />
-
-          <!-- Top lid -->
-          <rect x="3" y="4" width="18" height="2" fill="currentColor" />
-
-          <!-- Trashcan body -->
-          <rect
-            x="6"
-            y="6"
-            width="12"
-            height="14"
-            rx="2"
-            ry="2"
-            stroke="currentColor"
-            fill="none"
+          <path
+            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"
           />
-
-          <!-- Inner vertical lines -->
-          <line x1="9" y1="8" x2="9" y2="18" stroke="currentColor" />
-          <line x1="12" y1="8" x2="12" y2="18" stroke="currentColor" />
-          <line x1="15" y1="8" x2="15" y2="18" stroke="currentColor" />
         </svg>
       </div>
     </div>
@@ -2015,40 +1993,18 @@ const handleComboButtonClicked = (type) => {
         class="text-white bg-[#fb827f] border-0 text-base font-normal uppercase cursor-pointer px-3 py-1.5 m-0 rounded-none hover:border-transparent hover:shadow-[inset_0_0_6px_rgba(0,0,0,0.5),0_0_0_black] transition-all duration-400 flex items-center"
       >
         Clear
-        <!-- Outline Trashcan (24x24) -->
+
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="16"
           height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          fill="currentColor"
+          class="bi bi-trash-fill"
+          viewBox="0 0 16 16"
         >
-          <!-- Lid handle -->
-          <path d="M9 3h6" stroke="currentColor" />
-
-          <!-- Top lid -->
-          <rect x="3" y="4" width="18" height="2" fill="currentColor" />
-
-          <!-- Trashcan body -->
-          <rect
-            x="6"
-            y="6"
-            width="12"
-            height="14"
-            rx="2"
-            ry="2"
-            stroke="currentColor"
-            fill="none"
+          <path
+            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"
           />
-
-          <!-- Inner vertical lines -->
-          <line x1="9" y1="8" x2="9" y2="18" stroke="currentColor" />
-          <line x1="12" y1="8" x2="12" y2="18" stroke="currentColor" />
-          <line x1="15" y1="8" x2="15" y2="18" stroke="currentColor" />
         </svg>
       </div>
     </div>
