@@ -2,7 +2,7 @@
 import BasicGameInfo from "@/components/BasicGameInfo.vue";
 import SingleRaceGameDisplay from "@/components/SingleRaceGameDisplay.vue";
 import Betslip from "@/components/Betslip.vue";
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, watch, onMounted, computed, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import CashierModal from "@/components/CashierModal.vue";
 import RedeemModal from "@/components/RedeemModal.vue";
@@ -13,9 +13,11 @@ import MainIcons from "@/components/MainIcons.vue";
 import axios from "axios";
 import { useAuthStore } from "@/store/auth";
 import { useUrl } from "@/store/url";
+import { useCheckPrinterStatus } from "@/store/printer";
 
 const auth = useAuthStore();
 const url = useUrl();
+const printer = useCheckPrinterStatus();
 
 const router = useRouter();
 
@@ -28,13 +30,10 @@ async function getEvents(b) {
   try {
     detailPending.value = true;
     e.value = null;
-    console.log("Fetching events with params:", b);
 
     const res = await axios.post(`${url.url}/api/events`, b);
-    console.log(res.data);
 
     e.value = res.data;
-    console.log("Fetched events:", res.data);
     detailPending.value = false;
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -63,7 +62,6 @@ async function handleGameChange(game, isFinshed) {
   betSlipICon.value = game.searchName;
 
   if (isFinshed) {
-    console.log("isFinshed", isFinshed);
     e.value = null;
     // selectedBets.value = [];
     betPlacedSuccess.value = false;
@@ -75,7 +73,6 @@ async function handleGameChange(game, isFinshed) {
     });
   } else {
     if (selectedGame.value !== game.searchName) {
-      console.log(true);
       e.value = null;
       selectedBets.value = [];
       betPlacedSuccess.value = false;
@@ -110,9 +107,7 @@ async function handleGameChange(game, isFinshed) {
   imageDir.value = images.value;
 }
 
-watch(e, (newVal) => {
-  console.log("Updated events:", newVal);
-});
+watch(e, (newVal) => {});
 
 const eventDetail = ref({});
 
@@ -121,6 +116,7 @@ const expiredBets = ref([]);
 const comboSelections = ref({});
 
 const showPrinterCheckModal = ref(false);
+const showWhiteScreen = ref(true);
 
 const cancelTickets = ref([]);
 const cancelTicketLoader = ref(false);
@@ -143,6 +139,11 @@ const balance = ref(0);
 const balanceDataLoader = ref(false);
 const recallBets = ref([]);
 const recallBetLoader = ref(false);
+const resultData = ref([]);
+const resultLoader = ref(false);
+const passwordChangeLoader = ref(false);
+const passwordChangeMessage = ref(null);
+const passwordChangeState = ref(false);
 
 const showGamesDisplay = ref(true);
 
@@ -312,13 +313,11 @@ const handleFinish = async (id, feed, name) => {
   eventDetail.value = {};
   // await getEvents({ name, feedId: feed });
   await handleGameChange({ searchName: name, feedId: feed }, true);
-  // console.log("Finshed", name, feed);
   expiredBets.value = selectedBets.value.filter((bets) => bets.id === id);
   selectedBets.value = selectedBets.value.filter((bets) => bets.id !== id);
 };
 
 const handleWinClicked = (bet) => {
-  // console.log('index', id)
   // selectedBets.value.push(bet);
   handleComboClicked(bet.number, bet.id, true);
   betPlacedSuccess.value = false;
@@ -336,7 +335,6 @@ const handleWinClicked = (bet) => {
     selectedBets.value.push(bet);
   }
   trackingSelectedNumbers.value.push(bet.number);
-  console.log(selectedBets.value);
 };
 
 const handleComboClicked = (n, id, from) => {
@@ -352,8 +350,6 @@ const handleComboClicked = (n, id, from) => {
       comboSelections.value[id].splice(index, 1);
     }
   }
-
-  console.log(comboSelections.value[id], id, n);
 };
 
 const handleClearCombo = (id) => {
@@ -411,10 +407,8 @@ const handleCombos = async (
 ) => {
   betPlacedSuccess.value = false;
 
-  // console.log(type, eventId, Id, typeToSend, marketValue, eventValue);
   detailPending.value = true;
   const selection = comboHelper(typeToSend, eventId);
-  // console.log(selection);
   const res = await axios.post(`${url.url}/api/combo`, [
     {
       ID: 3,
@@ -426,8 +420,6 @@ const handleCombos = async (
     },
   ]);
   const data = ref(res.data);
-
-  // console.log(data.value.data[0]);
 
   const slip = {
     id: eventId,
@@ -451,7 +443,6 @@ const handleCombos = async (
 };
 
 function handleSingleMinus(index) {
-  console.log(index);
   if (selectedBets.value[index].stake > 10) {
     selectedBets.value[index].stakeUpdated = true;
     selectedBets.value[index].stake = selectedBets.value[index].stake - 10;
@@ -462,14 +453,12 @@ function handleSingleMinus(index) {
 }
 
 function handleSinglePlus(index) {
-  console.log(index);
   selectedBets.value[index].stakeUpdated = true;
 
   selectedBets.value[index].stake = selectedBets.value[index].stake + 10;
 }
 
 function handleGeneralStakeButtons(value) {
-  console.log(value);
   selectedBets.value.map((bet) => {
     if (bet.stakeUpdated) {
       bet.stake = bet.stake + value;
@@ -485,7 +474,6 @@ function handleGeneralStakeButtons(value) {
 }
 
 function handleGeneralPlus(value) {
-  console.log(value);
   selectedBets.value.map((bet) => {
     bet.stakeUpdated = true;
 
@@ -494,7 +482,6 @@ function handleGeneralPlus(value) {
 }
 
 function handleGeneralMinus(value) {
-  console.log(value);
   selectedBets.value.map((bet) => {
     bet.stakeUpdated = true;
 
@@ -503,7 +490,6 @@ function handleGeneralMinus(value) {
 }
 
 function handleSingleInpuChange(index, value) {
-  console.log(index, value);
   selectedBets.value[index].stake = value;
   bet.stakeUpdated = true;
 }
@@ -530,6 +516,10 @@ function clearExpiredBets() {
 }
 
 async function handlePlaceBet() {
+  if (!printer.online) {
+    await checkPrinterIsOnline();
+    return;
+  }
   placingBet.value = true;
   const res = await axios.post(
     `${url.url}/api/placeBet`,
@@ -542,8 +532,6 @@ async function handlePlaceBet() {
       withCredentials: true,
     }
   );
-
-  // console.log(data)
 
   if (res.data.expired) {
     router.push({
@@ -570,8 +558,6 @@ async function printBet(data) {
       },
       body: JSON.stringify(data),
     });
-
-    console.log("Printed successfully");
   } catch (error) {
     console.error("Error printing:", error);
   }
@@ -592,7 +578,6 @@ async function handleCancelTicket(id) {
       cancelTickets.value = res.data.data;
       cancelTicketId.value = id;
     } else {
-      console.log(res.data);
       cancleTicketMessage.value = res.data.message;
     }
     cancelTicketLoader.value = false;
@@ -641,7 +626,6 @@ async function handleRedeemTicket(id) {
       redeemTicketMessage.value = res.data.message;
       redeemTicket.value = { rows: [], numbers: [] };
     }
-    console.log(redeemTicket.value);
     redeemTicketLoader.value = false;
   } catch (error) {
     console.log(error);
@@ -649,7 +633,6 @@ async function handleRedeemTicket(id) {
 }
 
 async function proceedRedeemTicket(winners) {
-  // console.log(winners);
   try {
     redeemTicketLoader.value = true;
 
@@ -670,11 +653,13 @@ async function proceedRedeemTicket(winners) {
 
 async function checkPrinterIsOnline() {
   try {
+    printer.changePrinterState(false);
     const res = await fetch("http://localhost:8000/ISONLINE");
     showPrinterCheckModal.value = false;
-    console.log("Retail Manager: Online");
+    printer.changePrinterState(true);
   } catch (error) {
     showPrinterCheckModal.value = true;
+    printer.changePrinterState(false);
   }
 }
 
@@ -695,11 +680,9 @@ async function getBalanceData(username) {
   });
 
   balanceData.value = res.data;
-  console.log(balanceData.value);
   setTimeout(() => {
     balanceDataLoader.value = false;
   }, 500);
-  console.log(balanceData.value);
 }
 
 async function getRecallBets(username) {
@@ -722,7 +705,6 @@ async function handleCopyTicket(id) {
     cashier: auth?.user?.cashier,
   });
 
-  // console.log(res);
   printBet(res.data);
 }
 
@@ -740,14 +722,78 @@ async function printZReport(day) {
   } catch (error) {
     console.log(error);
   }
-  console.log("z-report");
+}
+
+async function getResults() {
+  try {
+    resultLoader.value = true;
+    resultData.value = [];
+    const res = await axios.post(`${url.url}/api/results`);
+    resultData.value = res.data.rows;
+    setTimeout(() => {
+      resultLoader.value = false;
+    }, 500);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function printResult(eventid) {
+  try {
+    const res = await axios.post(`${url.url}/api/printResult`, {
+      eventid,
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
+    });
+
+    if (res.data.success) {
+      printBet(res.data.ticket);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getSearchResult(id) {
+  try {
+    resultLoader.value = true;
+    resultData.value = [];
+    const res = await axios.post(`${url.url}/api/searchResults`, {
+      gameid: id,
+    });
+    resultData.value = res.data.rows;
+    setTimeout(() => {
+      resultLoader.value = false;
+    }, 500);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function changePassword(current, newp, confirm) {
+  passwordChangeLoader.value = true;
+  try {
+    const res = await axios.post(`${url.url}/api/changePassword`, {
+      currentPassword: current,
+      newPassword: newp,
+      confirmPassword: confirm,
+      username: auth?.user?.user,
+      cashier: auth?.user?.cashier,
+    });
+
+    console.log(res.data);
+    passwordChangeLoader.value = false;
+    passwordChangeMessage.value = res.data.message;
+    passwordChangeState.value = true;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function checkSession() {
   const res = await axios.get("http://localhost:5000/api/check-session", {
     withCredentials: true,
   });
-  console.log("+++++*******%%%%%%%", res.data);
   if (!res.data.loggedIn) {
     router.push("/RetailUser/Login");
   }
@@ -757,17 +803,30 @@ function handleLogout() {
   auth.logout();
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await checkPrinterIsOnline();
   const ok = await auth.checkSession();
   if (!ok) {
     router.push("/RetailUser/Login");
   }
-  console.log(auth.user, "asdhjkasdashdk");
+  showWhiteScreen.value = false;
 });
 </script>
 
 <template>
+  <div
+    v-if="showWhiteScreen"
+    class="fixed inset-0 bg-white bg-opacity-100 flex items-center justify-center z-30"
+  >
+    <!-- Modal Box -->
+    <div class="">
+      <!-- <div
+        class="w-14 h-14 rounded-full border-[6px] animate-spin"
+        style="border-color: #37b34a; border-top-color: #a1e2ab"
+      ></div> -->
+    </div>
+  </div>
+
   <!-- Loader -->
   <div
     v-if="pending || detailPending || !e"
@@ -841,12 +900,21 @@ onMounted(async () => {
     @getRecallBets="getRecallBets()"
     @copyTicket="handleCopyTicket"
     @printZReport="printZReport"
+    @getResults="getResults"
+    @printResult="printResult"
+    @searchResult="getSearchResult"
+    @changePassword="changePassword"
     title="Cashier Options"
     :balanceData="balanceData"
     :balance="balance"
     :balanceDataLoader="balanceDataLoader"
     :recallBets="recallBets"
     :recallBetLoader="recallBetLoader"
+    :resultData="resultData"
+    :resultsLoader="resultLoader"
+    :passwordChangeLoader="passwordChangeLoader"
+    :passwordChangeMessage="passwordChangeMessage"
+    :passwordChangeState="passwordChangeState"
   />
 
   <div

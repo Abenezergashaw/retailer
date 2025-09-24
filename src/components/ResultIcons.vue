@@ -2,13 +2,11 @@
 const props = defineProps({
   game: String,
 });
-
-console.log(props.game);
 </script>
 <template>
   <div
     v-if="game === 'PlatinumHounds'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-black"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +29,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'DashingDerby'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +56,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'SpeedSkating'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +75,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'SteepleChase'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +98,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'MotorRacing'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +125,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'CycleRacing'"
-    class="w-6 h-5 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +154,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'HarnessRacing'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -179,7 +177,7 @@ console.log(props.game);
 
   <div
     v-if="game === 'SingleSeaterMotorRacing'"
-    class="w-6 h-6 flex items-center justify-center absolute top-1 left-2 text-white"
+    class="w-10 h-10 flex items-center justify-center text-[#8c8c8c]"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"

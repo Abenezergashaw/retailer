@@ -121,7 +121,7 @@ onBeforeUnmount(() => {
 <template>
   <div
     v-if="showPrinterCheckModal"
-    class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+    class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-20"
   >
     <div
       ref="modalRef"

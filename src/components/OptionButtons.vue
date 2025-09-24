@@ -5,7 +5,6 @@ const props = defineProps({
   bg: String,
   hover: String,
 });
-console.log(props.bg, props.hover);
 const buttonClasses = computed(() => [
   "h-[34px]",
   "px-3",
