@@ -14,7 +14,7 @@ const buttonClasses = computed(() => [
   "items-center",
   "gap-2",
   "cursor-pointer",
-  "text-[0.9em]",
+  "text-[0.8em]",
   "rounded",
   "text-white",
   "transition-colors",
