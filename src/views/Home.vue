@@ -929,7 +929,7 @@ onBeforeMount(async () => {
     >
       Retail Logo
     </div>
-    <div class="flex gap-2">
+    <div class="hidden md:flex gap-2">
       <OptionButtons
         @click="
           showCashierModal = true;
@@ -952,7 +952,26 @@ onBeforeMount(async () => {
         hover="#333"
       />
     </div>
-    <div class="flex gap-2 items-center h-full">
+
+    <button
+      class="md:hidden relative w-8 h-8 flex flex-col justify-center items-center group mr-2"
+      @click="toggleMenu"
+    >
+      <span
+        class="block w-6 h-0.5 bg-[#37b34a] rounded transition-all duration-300"
+        :class="isOpen ? 'rotate-45 translate-y-1.5' : ''"
+      ></span>
+      <span
+        class="block w-6 h-0.5 bg-[#37b34a] rounded transition-all duration-300 my-1"
+        :class="isOpen ? 'opacity-0' : ''"
+      ></span>
+      <span
+        class="block w-6 h-0.5 bg-[#37b34a] rounded transition-all duration-300"
+        :class="isOpen ? '-rotate-45 -translate-y-1.5' : ''"
+      ></span>
+    </button>
+
+    <div class="hidden md:flex gap-2 items-center h-full">
       <div class="font-roboto text-sm text-[#727272]">
         {{ auth?.user?.user }} {{ auth?.user?.cashier }} ({{
           auth?.user?.username
