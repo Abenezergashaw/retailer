@@ -604,7 +604,7 @@ function handleSingleStakeButtons(value, index) {
     </div>
 
     <!-- Bet infos  -->
-    <div class="px-3 w-full text-[#939393]">
+    <div class="px-0 w-full text-[#939393] relative">
       <!-- Stake -->
       <div v-if="betsWithToWin.length > 1">
         <div class="text-sm font-semibold ml-8">STAKE</div>
@@ -665,30 +665,29 @@ function handleSingleStakeButtons(value, index) {
       <!-- Totals -->
       <div
         v-if="betsWithToWin.length > 0"
-        class="flex justify-between text-base mt-1"
+        class="flex justify-between text-base mt-1 px-3"
       >
         <span class="uppercase">Total Stake</span>
         <span class="font-semibold">Br {{ totals.totalStake.toFixed(2) }}</span>
       </div>
       <div
         v-if="betsWithToWin.length > 0"
-        class="flex justify-between text-base font-bold uppercase text-[#939393]"
+        class="flex justify-between text-base font-bold uppercase text-[#939393] px-3"
       >
         <span>Total "To Win"</span>
         <span>Br {{ totals.totalToWin.toFixed(2) }}</span>
       </div>
-    </div>
-
-    <div class="w-full relative">
-      <div
-        class="flex items-center justify-between font-normal tracking-wider relative"
-      >
-        <!-- <div class="absolute right-[10%] bottom-[280px] z-10" v-if="placingBet">
+      <div class="flex items-center justify-between font-normal tracking-wider">
+        <div
+          class="absolute left-32 z-10"
+          :class="`${betsWithToWin.length === 1 ? 'top-2' : 'top-12'}`"
+          v-if="placingBet"
+        >
           <div
             class="w-12 h-12 rounded-full border-[6px] animate-spin"
             style="border-color: #37b34a; border-top-color: #a1e2ab"
           ></div>
-        </div> -->
+        </div>
 
         <div class="w-1/4 relative">
           <button
@@ -723,6 +722,8 @@ function handleSingleStakeButtons(value, index) {
         </div>
       </div>
     </div>
+
+    <div class="w-full relative"></div>
   </div>
 </template>
 

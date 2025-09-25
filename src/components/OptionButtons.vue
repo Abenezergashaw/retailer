@@ -1,5 +1,7 @@
 <script setup>
 import { computed } from "vue";
+import DollarIcon from "./DollarIcon.vue";
+import CancelIcon from "./CancelIcon.vue";
 const props = defineProps({
   name: String,
   bg: String,
@@ -9,12 +11,12 @@ const buttonClasses = computed(() => [
   "h-[34px]",
   "px-3",
   "font-roboto",
+  "text-[14.5px]",
   "flex",
   "justify-center",
   "items-center",
   "gap-2",
   "cursor-pointer",
-  "text-[12px]",
   "rounded",
   "text-white",
   "transition-colors",
@@ -27,15 +29,8 @@ const buttonClasses = computed(() => [
 <template>
   <button :class="buttonClasses" style="color: white">
     {{ name }}
-    <span v-if="name === 'Redeem'" class="glyphicon glyphicon-usd"></span>
+    <DollarIcon v-if="name === 'Redeem'" />
 
-    <span
-      v-if="name === 'Cancel'"
-      class="glyphicon glyphicon-ban-circle"
-    ></span>
+    <CancelIcon v-if="name === 'Cancel'" />
   </button>
 </template>
-
-<style scoped>
-@import "bootstrap/dist/css/bootstrap.css";
-</style>

@@ -253,7 +253,8 @@ onBeforeUnmount(() => {
       style="
         animation: scaleIn 0.5s ease-out forwards;
         width: 98vw;
-        height: 95vh;
+        /* min-height: 200px; */
+        max-height: 98vh;
       "
     >
       <div
