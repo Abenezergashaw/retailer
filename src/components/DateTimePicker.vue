@@ -1,16 +1,40 @@
-<script setup></script>
+<script setup>
+defineProps({
+  time: {
+    type: String,
+    default: "00:00:00",
+  },
+});
+
+function getCurrentDateTime() {
+  const now = new Date();
+
+  const pad = (num) => String(num).padStart(2, "0");
+
+  const day = pad(now.getDate());
+  const month = pad(now.getMonth() + 1); // months are 0-based
+  const year = now.getFullYear();
+
+  const hours = pad(now.getHours());
+  const minutes = pad(now.getMinutes());
+
+  return {
+    date: `${day}/${month}/${year}`,
+    time: `${hours}:${minutes}`,
+  };
+}
+</script>
 
 <template>
   <div class="relative w-full max-w-xs">
-    <input
-      type="text"
-      value="2025/09/09 00:00:00"
-      class="w-full rounded-md border border-gray-300 bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-      disabled
-    />
+    <div
+      class="w-full rounded-md border border-gray-300 bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600 opacity-50 cursor-not-allowed select-none"
+    >
+      {{ `${getCurrentDateTime().date} ${time}` }}
+    </div>
 
     <div
-      class="absolute inset-y-0 right-0 flex items-center space-x-2 text-[#37b34a] disabled:cursor-not-allowed disabled:opacity-50 bg-slate-200 rounded-r-md px-1"
+      class="absolute inset-y-0 right-0 flex items-center space-x-2 text-[#37b34a] cursor-not-allowed opacity-50 bg-slate-200 rounded-r-md px-1"
       disabled
     >
       <svg viewBox="0 0 512 512" class="w-4 h-4 fill-current">

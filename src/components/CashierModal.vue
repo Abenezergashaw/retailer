@@ -16,6 +16,8 @@ import EyeIcon from "./EyeIcon.vue";
 import BetSlipIcon from "./BetSlipIcon.vue";
 import ResultIcons from "./ResultIcons.vue";
 
+import { useFolderImages } from "@/composables/useFolderImages";
+
 const props = defineProps({
   showCashierModal: { type: Boolean, default: false },
   title: String,
@@ -31,6 +33,10 @@ const props = defineProps({
   passwordChangeState: Boolean,
   passwordChangeMessage: String,
 });
+
+// const images = useFolderImages("GreyhoundJackets");
+
+const imageDir = ref(null);
 
 console.log("Balance", props.balance);
 
@@ -74,6 +80,36 @@ const totals = props.balanceData.reduce(
   { bets: 0, cancellations: 0, redeemed: 0 }
 );
 const keyboard = [1, 2, 3, 4, 5, 6, 7, 8, 9, "L", 0, ""];
+
+function handleDetail(b) {
+  let i = null;
+
+  if (b.gamename === "PlatinumHounds") {
+    i = "GreyhoundJackets";
+  } else if (b.gamename === "DashingDerby" || b.gamename === "HarnessRacing") {
+    i = "HorseSilks";
+  } else if (b.gamename === "SpeedSkating") {
+    i = "SpeedSkating";
+  } else if (b.gamename === "SteepleChase") {
+    i = "HorseSilks";
+  } else if (
+    b.gamename === "MotorRacing" ||
+    b.gamename === "SingleSeaterMotorRacing"
+  ) {
+    i = "MaxCarHelmets";
+  } else if (b.gamename === "CycleRacing") {
+    i = "CyclistHelmets";
+  }
+  const folderImages = useFolderImages(i);
+  imageDir.value = folderImages.images;
+  selectedResult.value = b;
+
+  console.log(imageDir.value.value, i);
+}
+
+// const res = computed(() => {
+// return selectedResult.result.split(",").map(Number).splice(0,3)
+// });
 
 function startDrag(e) {
   if (isResizing.value) return;
@@ -370,7 +406,7 @@ onBeforeUnmount(() => {
                     <span class="text-xs font-semibold text-center"
                       >From Date</span
                     >
-                    <DateTimePicker />
+                    <DateTimePicker time="00:00:00" />
                   </div>
                   <div
                     class="relative w-full max-w-xs flex flex-col items-start justify-start gap-1"
@@ -378,7 +414,7 @@ onBeforeUnmount(() => {
                     <span class="text-xs font-semibold text-center"
                       >To Date</span
                     >
-                    <DateTimePicker />
+                    <DateTimePicker time="23:59:59" />
                   </div>
                 </div>
 
@@ -604,7 +640,7 @@ onBeforeUnmount(() => {
                     <EyeIcon
                       @click="
                         mainTab = 'details';
-                        selectedResult = b;
+                        handleDetail(b);
                       "
                     />
                   </td>
@@ -656,21 +692,48 @@ onBeforeUnmount(() => {
               <div class="flex justify-between gap-24 text-sm">
                 <div>
                   <img
-                    src="../assets/images/CyclistHelmets/silk_1.png"
+                    :src="`${
+                      selectedResult.gamename === 'PlatinumHounds' ||
+                      selectedResult.gamename === 'MotorRacing' ||
+                      selectedResult.gamename === 'CycleRacing' ||
+                      selectedResult.gamename === 'SingleSeaterMotorRacing'
+                        ? imageDir.value[
+                            selectedResult.result.split(',').map(Number)[0] - 1
+                          ]
+                        : imageDir.value[Math.floor(Math.random() * 40) + 1]
+                    }`"
                     alt=""
                   />
                   {{ selectedResult.first }}
                 </div>
                 <div>
                   <img
-                    src="../assets/images/CyclistHelmets/silk_1.png"
+                    :src="`${
+                      selectedResult.gamename === 'PlatinumHounds' ||
+                      selectedResult.gamename === 'MotorRacing' ||
+                      selectedResult.gamename === 'CycleRacing' ||
+                      selectedResult.gamename === 'SingleSeaterMotorRacing'
+                        ? imageDir.value[
+                            selectedResult.result.split(',').map(Number)[1] - 1
+                          ]
+                        : imageDir.value[Math.floor(Math.random() * 40) + 1]
+                    }`"
                     alt=""
                   />
                   {{ selectedResult.second }}
                 </div>
                 <div>
                   <img
-                    src="../assets/images/CyclistHelmets/silk_1.png"
+                    :src="`${
+                      selectedResult.gamename === 'PlatinumHounds' ||
+                      selectedResult.gamename === 'MotorRacing' ||
+                      selectedResult.gamename === 'CycleRacing' ||
+                      selectedResult.gamename === 'SingleSeaterMotorRacing'
+                        ? imageDir.value[
+                            selectedResult.result.split(',').map(Number)[2] - 1
+                          ]
+                        : imageDir.value[Math.floor(Math.random() * 40) + 1]
+                    }`"
                     alt=""
                   />
                   {{ selectedResult.third }}

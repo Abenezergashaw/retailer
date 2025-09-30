@@ -541,6 +541,12 @@ async function handlePlaceBet() {
     return;
   }
 
+  if (res.data.timeExpired) {
+    expiredBets.value = selectedBets.value;
+    selectedBets.value = [];
+    return;
+  }
+
   if (res.data.success) {
     placingBet.value = false;
     selectedBets.value = [];
