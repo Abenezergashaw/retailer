@@ -303,6 +303,7 @@ onBeforeUnmount(() => {
             $emit('close');
             mainTab = 'report';
             secondTab = 'cash';
+            searchID = null;
           "
           class="fill-[#bfbfbf] text-[#1f652a] hover:fill-[#57BF67] hover:text-[#818382]"
         >

@@ -1,4 +1,6 @@
 <script setup>
+import KendoDate from "./KendoDate.vue";
+
 defineProps({
   time: {
     type: String,
@@ -28,14 +30,13 @@ function getCurrentDateTime() {
 <template>
   <div class="relative w-full max-w-xs">
     <div
-      class="w-full rounded-md border border-gray-300 bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600 opacity-50 cursor-not-allowed select-none"
+      class="w-full rounded-md border border-gray-300 bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600 tracking-wide"
     >
       {{ `${getCurrentDateTime().date} ${time}` }}
     </div>
 
     <div
-      class="absolute inset-y-0 right-0 flex items-center space-x-2 text-[#37b34a] cursor-not-allowed opacity-50 bg-slate-200 rounded-r-md px-1"
-      disabled
+      class="absolute inset-y-0 right-0 flex items-center space-x-2 text-[#37b34a] bg-slate-200 rounded-r-md px-1 cursor-pointer hover:bg-[#d8d8d8]"
     >
       <svg viewBox="0 0 512 512" class="w-4 h-4 fill-current">
         <path

@@ -12,6 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@progress/kendo-vue-dateinputs": "^7.0.0",
+    "@progress/kendo-vue-intl": "^7.0.0",
     "axios": "^1.12.1",
     "bootstrap": "^3.4.1",
     "pinia": "^3.0.3",

@@ -140,8 +140,12 @@ onBeforeUnmount(() => {
   >
     <div
       ref="modalRef"
-      class="absolute bg-white shadow-lg rounded min-w-[250px] min-h-[150px]"
-      style="animation: scaleIn 0.5s ease-out forwards; width: 98vw"
+      class="absolute bg-white shadow-lg rounded min-w-[250px] min-h-[150px] overflow-auto"
+      style="
+        animation: scaleIn 0.5s ease-out forwards;
+        width: 98vw;
+        max-height: 98vh;
+      "
     >
       <!-- Header (draggable area) -->
       <div
