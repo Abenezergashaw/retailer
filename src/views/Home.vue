@@ -440,7 +440,17 @@ const handleCombos = async (
     gameName,
   };
 
-  selectedBets.value.push(slip);
+  console.log(slip);
+
+  const exists = selectedBets.value.some(
+    (b) => b.betType === slip.betType && b.name === slip.name
+  );
+
+  if (!exists) {
+    selectedBets.value.push(slip);
+  }
+
+  // selectedBets.value.push(slip);
 
   detailPending.value = false;
 };
