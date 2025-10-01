@@ -177,7 +177,8 @@ onBeforeUnmount(() => {
         started the retail manager. You can download the retail manager from
         <a
           class="text-[#37b34a] cursor-pointer hover:underline hover:text-[#577B9B]"
-          href="/"
+          href="/BetMan.Retail.Manager.application"
+          download
           >here</a
         >
         <div
