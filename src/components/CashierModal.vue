@@ -15,6 +15,9 @@ import CloseIcon from "./CloseIcon.vue";
 import EyeIcon from "./EyeIcon.vue";
 import BetSlipIcon from "./BetSlipIcon.vue";
 import ResultIcons from "./ResultIcons.vue";
+import Export from "./Export.vue";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 import { useFolderImages } from "@/composables/useFolderImages";
 
@@ -266,6 +269,14 @@ function handlePasswordChange() {
     confirmPassword.value = "";
     return;
   }
+}
+
+function exportTableToExcel(tableId, filename = "Events Export.xlsx") {
+  const table = document.getElementById("resultTable");
+  const workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+  const wbout = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+
+  saveAs(new Blob([wbout], { type: "application/octet-stream" }), filename);
 }
 
 onMounted(() => {
@@ -555,8 +566,9 @@ onBeforeUnmount(() => {
               class="w-full flex justify-start gap-2 text-[#37b34a] mt-4 ml-4 mb-2"
             >
               <RefreshButton @click="$emit('getResults')" />
-
+              <Export @click="exportTableToExcel()" />
               <div
+                v-if="false"
                 class="text-xs border border-[#37b34a] px-2.5 py-1 rounded flex gap-1 text-[#333] cursor-pointer hover:bg-[#F1FBF2]"
                 @click="$emit('getRecallBets')"
               >
@@ -587,7 +599,10 @@ onBeforeUnmount(() => {
               </div>
             </div>
 
-            <table class="min-w-full border border-gray-100 divide-y text-xs">
+            <table
+              id="resultTable"
+              class="min-w-full border border-gray-100 divide-y text-xs"
+            >
               <thead class="">
                 <tr>
                   <th class="px-4 py-2 text-left font-medium border-r truncate">
@@ -622,22 +637,23 @@ onBeforeUnmount(() => {
                 </div>
                 <tr
                   v-if="resultData.length > 0 && !resultLoader"
-                  v-for="b in resultData"
+                  v-for="(b, i) in resultData"
                   class="border-b hover:bg-[#C5BDB9]"
+                  :class="`${i % 2 === 0 ? 'bg-[#efefef]' : ''}`"
                 >
-                  <td class="px-4 py-2 text-left font-medium border-r truncate">
+                  <td class="px-4 py-1 text-left font-medium border-r truncate">
                     {{ b.gamename }}
                   </td>
-                  <td class="px-4 py-2 text-left font-medium border-r truncate">
+                  <td class="px-4 py-1 text-left font-medium border-r truncate">
                     {{ b.eventid }}
                   </td>
-                  <td class="px-4 py-2 text-left font-medium border-r truncate">
+                  <td class="px-4 py-1 text-left font-medium border-r truncate">
                     {{ b.gameid }}
                   </td>
-                  <td class="px-4 py-2 text-left font-medium border-r truncate">
+                  <td class="px-4 py-1 text-left font-medium border-r truncate">
                     {{ toNairobiTime(b.date) }}
                   </td>
-                  <td class="px-4 py-2 text-left font-medium border-r truncate">
+                  <td class="px-4 py-1 text-left font-medium border-r truncate">
                     <EyeIcon
                       @click="
                         mainTab = 'details';
@@ -645,7 +661,7 @@ onBeforeUnmount(() => {
                       "
                     />
                   </td>
-                  <td class="px-4 py-2 text-left font-medium border-r truncate">
+                  <td class="px-4 py-1 text-left font-medium border-r truncate">
                     <PrintIcon @click="$emit('printResult', b.eventid)" />
                   </td>
                 </tr>

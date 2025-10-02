@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border border-[#37b34a] rounded px-1.5 py-2.5] cursor-pointer hover:bg-[#F0FAF2] py-1 flex justify-center bg-white"
+    class="border border-[#37b34a] rounded cursor-pointer hover:bg-[#F0FAF2] py-1 flex justify-center bg-white"
   >
     <svg
       viewBox="0 0 512 512"
