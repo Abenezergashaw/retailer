@@ -36,6 +36,7 @@ const selectedData = ref(null);
 <template>
   <div class="overflow-x-auto text-sm mt-6">
     <table
+      id="reportTable"
       class="min-w-full border border-gray-100 divide-y text-xs table-fixed"
     >
       <thead class="">

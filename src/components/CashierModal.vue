@@ -279,6 +279,14 @@ function exportTableToExcel(tableId, filename = "Events Export.xlsx") {
   saveAs(new Blob([wbout], { type: "application/octet-stream" }), filename);
 }
 
+function exportBalance(tableId, filename = "Report Export.xlsx") {
+  const table = document.getElementById("reportTable");
+  const workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+  const wbout = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+
+  saveAs(new Blob([wbout], { type: "application/octet-stream" }), filename);
+}
+
 onMounted(() => {
   window.addEventListener("mousemove", onDrag);
   window.addEventListener("mouseup", stopActions);
@@ -430,8 +438,11 @@ onBeforeUnmount(() => {
                   </div>
                 </div>
 
-                <div class="w-full flex justify-start text-[#37b34a] mt-4 ml-4">
+                <div
+                  class="w-full flex justify-start gap-2 text-[#37b34a] mt-4 ml-4"
+                >
                   <RefreshButton @click="$emit('getBalanceData')" />
+                  <Export @click="exportBalance()" />
                 </div>
 
                 <BalanceTable
