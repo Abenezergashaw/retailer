@@ -52,6 +52,7 @@ const imageDir = ref([]);
 imageDir.value = images.value;
 const placingBet = ref(false);
 const betPlacedSuccess = ref(false);
+const limitReached = ref(false);
 const isKeno = ref(false);
 
 const betSlipICon = ref("PlatinumHounds");
@@ -554,6 +555,13 @@ async function handlePlaceBet() {
     return;
   }
 
+  if (res.data.limited) {
+    selectedBets.value = [];
+    placingBet.value = false;
+    limitReached.value = true;
+    return;
+  }
+
   if (res.data.timeExpired) {
     expiredBets.value = selectedBets.value;
     selectedBets.value = [];
@@ -566,6 +574,9 @@ async function handlePlaceBet() {
     placingBet.value = false;
     selectedBets.value = [];
     betPlacedSuccess.value = true;
+    if (res.data.totalAmount / res.data.limita > 0.9) {
+      limitReached.value = true;
+    }
     await printBet(res.data.data);
   }
 }
@@ -1073,6 +1084,7 @@ onBeforeMount(async () => {
         :game="betSlipICon"
         :placingBet="placingBet"
         :betPlacedSuccess="betPlacedSuccess"
+        :limitReached="limitReached"
         @removeSelectedBet="handleWinClicked"
         @singleBetMinus="handleSingleMinus"
         @singleBetPlus="handleSinglePlus"

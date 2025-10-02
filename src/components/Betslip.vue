@@ -12,6 +12,7 @@ const props = defineProps({
   game: String,
   placingBet: Boolean,
   betPlacedSuccess: Boolean,
+  limitReached: Boolean,
 });
 
 const emit = defineEmits();
@@ -249,7 +250,7 @@ function handleSingleStakeButtons(value, index) {
     </div>
 
     <div
-      v-if="betsWithToWin.length === 0 && !betPlacedSuccess"
+      v-if="betsWithToWin.length === 0 && !betPlacedSuccess && !limitReached"
       class="text-[#8c8c8c] text-sm text-center my-2 font-roboto"
     >
       Add more bets
@@ -257,7 +258,7 @@ function handleSingleStakeButtons(value, index) {
 
     <div
       v-if="betPlacedSuccess && betsWithToWin.length === 0"
-      class="text-[#efefef] rounded py-0.5 text-[16px] text-center my-0 w-[95%] mx-auto"
+      class="text-[#efefef] rounded py-0.5 text-[15px] text-center my-0 w-[95%] mx-auto"
       style="
         animation: scaleIn 0.4s ease-out forwards,
           pulseColors 1.5s ease-in-out infinite;
@@ -265,6 +266,20 @@ function handleSingleStakeButtons(value, index) {
     >
       Bet successfully placed!
     </div>
+
+    <div
+      v-if="limitReached && betsWithToWin.length === 0"
+      class="text-[#efefef] rounded py-0.5 text-[15px] text-center my-0 w-[95%] mx-auto mt-1 px-2"
+      style="
+        animation: scaleIn 0.4s ease-out forwards,
+          pulseColors2 1.5s ease-in-out infinite;
+      "
+    >
+      WARNING, you are approaching your ‘cash balance limit’ and will be blocked
+      from selling, cancelling or redeeming bets when your limit is reached.
+      Please notify your Supervisor or Manager.
+    </div>
+
     <!-- Bet slip  -->
     <div class="max-h-[70vh] overflow-auto mt-1.5">
       <div v-for="(bet, index) in betsWithToWin" :key="bet.gameId">
@@ -757,6 +772,16 @@ function handleSingleStakeButtons(value, index) {
   }
   50% {
     background-color: #80b845;
+  }
+}
+
+@keyframes pulseColors2 {
+  0%,
+  100% {
+    background-color: #b96e00;
+  }
+  50% {
+    background-color: #e38800;
   }
 }
 @keyframes scaleIn {
