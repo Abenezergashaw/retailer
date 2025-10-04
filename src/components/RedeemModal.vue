@@ -615,7 +615,10 @@ onBeforeUnmount(() => {
                 Clear
               </div>
               <div
-                @click="$emit('redeemTicket', ticketId)"
+                @click="
+                  $emit('redeemTicket', ticketId);
+                  ticketId = '';
+                "
                 class="font-roboto bg-[#37b34a] border border-[#37b34a] py-2 rounded flex justify-center items-center text-white cursor-pointer hover:bg-[#2B8C3A] px-4"
               >
                 Enter
