@@ -532,7 +532,7 @@ function clearExpiredBets() {
 async function handlePlaceBet() {
   if (!printer.online) {
     await checkPrinterIsOnline();
-    return;
+    // return;
   }
   placingBet.value = true;
   const res = await axios.post(
