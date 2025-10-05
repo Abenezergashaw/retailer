@@ -593,7 +593,7 @@ async function printBet(data) {
     });
   } catch (error) {
     console.error("Error printing:", error);
-    await checkPrinterIsOnline();
+    // await checkPrinterIsOnline();
   }
 }
 
