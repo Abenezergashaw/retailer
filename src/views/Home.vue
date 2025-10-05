@@ -575,10 +575,10 @@ async function handlePlaceBet() {
     }
 
     await printBet(res.data.data);
-    if (!printer.online) {
-      await checkPrinterIsOnline();
-      // return;
-    }
+    // if (!printer.online) {
+    await checkPrinterIsOnline();
+    // return;
+    // }
   }
 }
 
