@@ -433,7 +433,10 @@ onBeforeUnmount(() => {
               >
                 Total Stake Br {{ totalStake.toFixed(2) }}
                 <button
-                  @click="$emit('proceedCancelTicket', ticketId)"
+                  @click="
+                    $emit('proceedCancelTicket', ticketId);
+                    ticketId = '';
+                  "
                   class="h-[34px] px-3 font-roboto flex justify-center items-center gap-2 cursor-pointer text-[.88em] rounded transition-colors text-white bg-[#f0ad4e] hover:bg-[#ec971f]"
                 >
                   Cancel
