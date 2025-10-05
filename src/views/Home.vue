@@ -530,10 +530,6 @@ function clearExpiredBets() {
 }
 
 async function handlePlaceBet() {
-  if (!printer.online) {
-    await checkPrinterIsOnline();
-    // return;
-  }
   placingBet.value = true;
   const res = await axios.post(
     `${url.url}/api/placeBet`,
@@ -577,7 +573,12 @@ async function handlePlaceBet() {
     if (res.data.totalAmount / res.data.limita > 0.9) {
       limitReached.value = true;
     }
+
     await printBet(res.data.data);
+    if (!printer.online) {
+      await checkPrinterIsOnline();
+      // return;
+    }
   }
 }
 
