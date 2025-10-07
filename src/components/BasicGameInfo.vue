@@ -304,7 +304,11 @@ function passCombos(
         <Plus
           :color="i.isExpanded || i.started ? 'fcfcfc' : '37B34A'"
           :state="i.isExpanded"
-          @click="handleToggle(i.EventId, i.ID)"
+          @click="
+            if (!i.isExpanded) {
+              handleToggle(i.EventId, i.ID);
+            }
+          "
         />
       </div>
     </div>
