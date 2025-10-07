@@ -294,14 +294,14 @@ const trackingSelectedNumbers = ref([]);
 
 async function fetchEventDetail(id, i) {
   try {
-    detailPending.value = true;
+    //detailPending.value = true;
 
     const res = await axios.post(`${url.url}/api/eventDetail`, {
       id: i,
     });
 
     eventDetail.value[id] = res.data;
-    detailPending.value = false;
+    //detailPending.value = false;
   } catch (error) {
     console.error("Error fetching event detail:", error);
   }
