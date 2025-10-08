@@ -37,7 +37,7 @@ const inputRef = ref(null);
 
 const ticketId = ref("");
 
-console.log(props.redeemTicket, "-----");
+// console.log(props.redeemTicket, "-----");
 
 let winners = [];
 const totalWin = computed(() => {
@@ -47,7 +47,7 @@ const totalWin = computed(() => {
         return acc + bet.stake * bet.odd;
       }
     } else if (bet.betType === "Place") {
-      console.log(props.redeemTicket.PlacePaysOn, "sadasdas");
+      // console.log(props.redeemTicket.PlacePaysOn, "sadasdas");
 
       if (props.redeemTicket.PlacePaysOn == 3) {
         if (

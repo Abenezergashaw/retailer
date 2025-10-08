@@ -20,7 +20,7 @@ const props = defineProps({
 
 const emit = defineEmits();
 
-console.log("Single", props.eventDetail);
+// console.log("Single", props.eventDetail);
 
 const checkIfNumberSelectedForCombo = (number, a) => {
   let n = null;
@@ -81,7 +81,7 @@ let trio = ref(null);
 let trifecta = ref(null);
 
 const comboCalculator = (a) => {
-  console.log(a);
+  // console.log(a);
   if (props.comboSelections[a]?.length === 2) {
     quinela.value = 1;
     swinger.value = 1;

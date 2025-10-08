@@ -5,7 +5,7 @@ import { DateTimePicker } from "@progress/kendo-vue-dateinputs";
 const value = ref(new Date()); // default selected date
 
 function refreshSummaryGrid(e) {
-  console.log("New date selected:", e.value);
+  // console.log("New date selected:", e.value);
 }
 </script>
 

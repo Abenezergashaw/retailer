@@ -24,7 +24,7 @@ const generalErrorMessage = ref("");
 const returnUrl = "/";
 const token = "";
 
-console.log(route.query);
+// console.log(route.query);
 
 if (route.query.msg) {
   generalError.value = true;
@@ -68,7 +68,7 @@ async function login() {
       }
     );
 
-    console.log("Login response:", response.data.message);
+    // console.log("Login response:", response.data.message);
     await auth.checkSession();
     router.push("/");
   } catch (error) {
@@ -85,7 +85,7 @@ async function checkSession() {
       withCredentials: true,
     }
   );
-  console.log("Session check response:", res.data);
+  // console.log("Session check response:", res.data);
   if (res.data.loggedIn) {
     router.push("/");
   }

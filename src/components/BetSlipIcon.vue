@@ -3,7 +3,7 @@ const props = defineProps({
   game: String,
 });
 
-console.log(props.game);
+// console.log(props.game);
 </script>
 <template>
   <div

@@ -41,7 +41,7 @@ const props = defineProps({
 
 const imageDir = ref(null);
 
-console.log("Balance", props.balance);
+// console.log("Balance", props.balance);
 
 const emit = defineEmits(["close"]);
 
@@ -107,7 +107,7 @@ function handleDetail(b) {
   imageDir.value = folderImages.images;
   selectedResult.value = b;
 
-  console.log(imageDir.value.value, i);
+  // console.log(imageDir.value.value, i);
 }
 
 // const res = computed(() => {

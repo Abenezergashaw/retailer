@@ -19,7 +19,7 @@ export const useAuthStore = defineStore("auth", {
         });
 
         if (res.data.expired) {
-          console.log("expired");
+          // console.log("expired");
           router.push({
             path: "/RetailUser/Login",
             query: { msg: res.data.message },
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore("auth", {
 
         if (res.data.loggedIn) {
           this.user = res.data.user;
-          console.log(this.user);
+          // console.log(this.user);
           return true;
         } else {
           return false;

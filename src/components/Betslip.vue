@@ -36,7 +36,7 @@ watch(
   { deep: true } // needed if selectedBets is an array of objects
 );
 
-console.log("Betwwithtowin,", betsWithToWin.value);
+// console.log("Betwwithtowin,", betsWithToWin.value);
 
 const generalStake = ref(10);
 
