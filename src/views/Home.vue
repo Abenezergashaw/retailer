@@ -125,7 +125,7 @@ const isKeno = ref(false);
 
 async function handleGameChange(game, isFinshed) {
   betSlipICon.value = game.searchName;
-  selectedGame.value = betSlipICon.value;
+  selectedGame.value = game.searchName;
 
   // if (isFinshed) {
   //   e.value = null;
@@ -482,6 +482,7 @@ const handleWinClicked = (bet) => {
     selectedBets.value.push(bet);
   }
   trackingSelectedNumbers.value.push(bet.number);
+  console.log(selectedBets.value);
 };
 
 const handleComboClicked = (n, id, from) => {

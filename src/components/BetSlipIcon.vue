@@ -18,7 +18,7 @@ console.log(props.game);
       style="enable-background: new 0 0 67.5 18.1"
       xml:space="preserve"
       data-svg-id="PlatinumHoundsSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="PlatinumHounds"
       src="/Content/Images/Icons/PlatinumHoundsIcon.svg"
     >
@@ -41,7 +41,7 @@ console.log(props.game);
       style="enable-background: new 0 0 49.5 36.1"
       xml:space="preserve"
       data-svg-id="DashingDerbySVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="DashingDerby"
       src="/Content/Images/Icons/DashingDerbyIcon.svg"
     >
@@ -64,7 +64,7 @@ console.log(props.game);
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 47.53 51.97"
       data-svg-id="SpeedSkatingSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="SpeedSkating"
       src="/Content/Images/Icons/SpeedSkatingIcon.svg"
     >
@@ -83,7 +83,7 @@ console.log(props.game);
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 51.22 41.92"
       data-svg-id="SteepleChaseSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="SteepleChase"
       src="/Content/Images/Icons/SteepleChaseIcon.svg"
     >
@@ -110,7 +110,7 @@ console.log(props.game);
       style="enable-background: new 0 0 100 35.8"
       xml:space="preserve"
       data-svg-id="MotorRacingSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="MotorRacing"
       src="/Content/Images/Icons/MotorRacingIcon.svg"
     >
@@ -137,7 +137,7 @@ console.log(props.game);
       style="enable-background: new 0 0 62.7 37.9"
       xml:space="preserve"
       data-svg-id="CycleRacingSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="CycleRacing"
       src="/Content/Images/Icons/CycleRacingIcon.svg"
     >
@@ -166,7 +166,7 @@ console.log(props.game);
       style="enable-background: new 0 0 59.7 37.9"
       xml:space="preserve"
       data-svg-id="HarnessRacingSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="HarnessRacing"
       src="/Content/Images/Icons/HarnessRacingIcon.svg"
     >
@@ -185,7 +185,7 @@ console.log(props.game);
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 76.7 21.55"
       data-svg-id="SingleSeaterMotorRacingSVG"
-      class="icon fill-current"
+      class="icon fill-white"
       alt="SingleSeaterMotorRacing"
       src="/Content/Images/Icons/SingleSeaterMotorRacingIcon.svg"
     >

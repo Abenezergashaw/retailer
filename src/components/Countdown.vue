@@ -50,6 +50,8 @@ onUnmounted(() => {
   <span
     class="bg-[#FFFF00] text-black text-[.7em] w-full flex justify-center items-center font-roboto tracking-widest rounded-tr-sm rounded-br-sm shadow-sm shadow-gray-700"
   >
-    {{ isFinished ? "00:00" : formattedCountdown }}
+    {{
+      isFinished ? "00:00" : diffInSeconds > 3600 ? "60+" : formattedCountdown
+    }}
   </span>
 </template>

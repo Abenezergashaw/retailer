@@ -1,4 +1,5 @@
 <script setup>
+import BetSlipIcon from "./BetSlipIcon.vue";
 import GeneralStakeButton from "./GeneralStakeButton.vue";
 import { ref, computed, watch } from "vue";
 
@@ -209,7 +210,7 @@ function handleSingleStakeButtons(value, index) {
         class="bg-[#C62828] w-full relative rounded py-1 mb-0.5"
       >
         <!-- Left Icon -->
-        <BetSlipIcon :game="e.gameName" />
+        <BetSlipIcon :game="game" />
 
         <div class="ml-9 text-white flex flex-col gap-0.5 leading-none text-xs">
           <div class="m-0 p-0">
