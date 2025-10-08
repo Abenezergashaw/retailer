@@ -140,17 +140,30 @@ localInfo.value.forEach((item) => {
 });
 
 watch(
-  () => props.info.data.Data,
+  () => props.info?.data?.Data,
   (newVal) => {
     const now = Date.now();
     let startedIndex = -1;
     // console.log("Changing");
     // First pass: detect started game
+    if (!newVal) return;
+
     localInfo.value = newVal.map((item, index) => {
       const start = parseDate(item.AdjustedStartTime);
       const finish = parseDate(item.AdjustedFinishTime);
 
       // now > start ? console.log("Greater") : console.log("Lesser");
+
+      if (now >= finish + 600) {
+        // console.log("Game started", item.EventId);
+        // startedIndex = index;
+        return {
+          ...item,
+          IsFinished: true,
+          IsNext: false,
+          isExpanded: false,
+        };
+      }
 
       if (now >= start - 500 && now <= finish + 500) {
         // console.log("Game started", item.EventId);

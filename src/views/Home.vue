@@ -29,6 +29,67 @@ const showModal = ref(false);
 const e = ref(null);
 const detailPending = ref(false);
 
+async function loadDefaultAtFirst() {
+  try {
+    detailPending.value = true;
+    // e.value = null;
+    const results = {};
+
+    const res = await axios.post(`${url.url}/api/events`, {
+      name: "PlatinumHounds",
+      feedId: 12,
+    });
+    results["PlatinumHounds"] = res.data;
+
+    e.value = { ...e.value, ...results };
+    detailPending.value = false;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
+}
+async function loadAllEventsAtOnce(current = "PlatinumHounds") {
+  const games = [
+    { name: "DashingDerby", feedId: 12 },
+    { name: "PlatinumHounds", feedId: 12 },
+    { name: "SpeedSkating", feedId: 90 },
+    { name: "SteepleChase", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "MotorRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "CycleRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "HarnessRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "SingleSeaterMotorRacing", feedId: 83 },
+    // { name: "SteepleChase", feedId: 90 },
+    // { name: "MotorRacing", feedId: 90 },
+    // { name: "CycleRacing", feedId: 90 },
+    // { name: "HarnessRacing", feedId: 90 },
+    // { name: "SingleSeaterMotorRacing", feedId: 90 },
+  ];
+
+  const results = {};
+
+  // 🔥 Skip the current game
+  const filteredGames = games.filter((game) => game.name !== current);
+
+  // Run all others in parallel
+  const promises = filteredGames.map(async (game) => {
+    const payload = { name: game.name, feedId: game.feedId };
+
+    try {
+      const res = await axios.post(`${url.url}/api/events`, payload);
+      // console.log(`✅ ${game.name} success`);
+      results[game.name] = res.data;
+    } catch (err) {
+      console.error(`❌ ${game.name} failed:`, err.message);
+    }
+  });
+
+  await Promise.all(promises);
+
+  // console.log("✅ All other games done");
+  // console.log(results);
+
+  e.value = { ...e.value, ...results };
+}
+
 async function getEvents(b) {
   try {
     detailPending.value = true;
@@ -43,7 +104,14 @@ async function getEvents(b) {
   }
 }
 
-getEvents({ name: "PlatinumHounds", feedId: 12 });
+loadDefaultAtFirst();
+const betSlipICon = ref("PlatinumHounds");
+const selectedGame = ref("PlatinumHounds");
+setInterval(() => {
+  loadAllEventsAtOnce(selectedGame.value);
+}, 5000);
+
+// getEvents({ name: "PlatinumHounds", feedId: 12 });
 
 let i = null;
 const { images } = useFolderImages("GreyhoundJackets");
@@ -55,36 +123,71 @@ const betPlacedSuccess = ref(false);
 const limitReached = ref(false);
 const isKeno = ref(false);
 
-const betSlipICon = ref("PlatinumHounds");
-const selectedGame = ref("PlatinumHounds");
-
 async function handleGameChange(game, isFinshed) {
-  selectedGame.value = betSlipICon.value;
   betSlipICon.value = game.searchName;
+  selectedGame.value = betSlipICon.value;
 
-  if (isFinshed) {
-    e.value = null;
-    // selectedBets.value = [];
-    betPlacedSuccess.value = false;
-    isKeno.value = false;
-    eventDetail.value = {};
-    await getEvents({
-      name: game.searchName,
-      feedId: game.feedId,
-    });
+  // if (isFinshed) {
+  //   e.value = null;
+  //   // selectedBets.value = [];
+  //   betPlacedSuccess.value = false;
+  //   isKeno.value = false;
+  //   eventDetail.value = {};
+  //   await getEvents({
+  //     name: game.searchName,
+  //     feedId: game.feedId,
+  //   });
+  // } else {
+  //   if (selectedGame.value !== game.searchName) {
+  //     e.value = null;
+  //     selectedBets.value = [];
+  //     betPlacedSuccess.value = false;
+  //     isKeno.value = false;
+  //     eventDetail.value = {};
+  //     await getEvents({
+  //       name: game.searchName,
+  //       feedId: game.feedId,
+  //     });
+  //   }
+  // }
+
+  if (
+    e.value[game.searchName] &&
+    Object.keys(e.value[game.searchName]).length > 0
+  ) {
+    console.log(game.feedId, "eesss", game.searchName);
+    // console.log("YESSSSSSSSS");
   } else {
-    if (selectedGame.value !== game.searchName) {
-      e.value = null;
-      selectedBets.value = [];
-      betPlacedSuccess.value = false;
-      isKeno.value = false;
-      eventDetail.value = {};
-      await getEvents({
+    try {
+      detailPending.value = true;
+      // e.value = null;
+      const results = {};
+
+      const res = await axios.post(`${url.url}/api/events`, {
         name: game.searchName,
         feedId: game.feedId,
       });
+      console.log(game.feedId, "NOOOOO", game.searchName);
+      results[game.searchName] = res.data;
+
+      e.value = { ...e.value, ...results };
+      // console.log("Nooooooooooo", e.value);
+
+      detailPending.value = false;
+    } catch (error) {
+      console.error("Error fetching events:", error);
     }
   }
+
+  detailPending.value = true;
+  setTimeout(() => {
+    detailPending.value = false;
+  }, 80);
+
+  selectedBets.value = [];
+  betPlacedSuccess.value = false;
+  isKeno.value = false;
+
   if (game.searchName === "PlatinumHounds") {
     i = "GreyhoundJackets";
   } else if (
@@ -293,15 +396,33 @@ const gamesList = computed(() => [
 const trackingSelectedNumbers = ref([]);
 
 async function fetchEventDetail(id, i) {
-  try {
-    //detailPending.value = true;
+  // try {
+  //   //detailPending.value = true;
 
+  //   const res = await axios.post(`${url.url}/api/eventDetail`, {
+  //     id: i,
+  //   });
+
+  //   eventDetail.value[id] = res.data;
+  //   //detailPending.value = false;
+  // } catch (error) {
+  //   console.error("Error fetching event detail:", error);
+  // }
+  try {
+    detailPending.value = true;
+    // if (
+    //   eventDetail.value[id] &&
+    //   Object.keys(eventDetail.value[id]).length > 0
+    // ) {
+    // } else {
     const res = await axios.post(`${url.url}/api/eventDetail`, {
       id: i,
     });
 
     eventDetail.value[id] = res.data;
-    //detailPending.value = false;
+    // }
+
+    detailPending.value = false;
   } catch (error) {
     console.error("Error fetching event detail:", error);
   }
@@ -313,12 +434,34 @@ function handleGetEventDetail(id, i) {
 
 const handleFinish = async (id, feed, name) => {
   // await refresh();
-  e.value = null;
+  // e.value = null;
+  // eventDetail.value = {};
+  // // await getEvents({ name, feedId: feed });
+  // await handleGameChange({ searchName: name, feedId: feed }, true);
+  // expiredBets.value = selectedBets.value.filter((bets) => bets.id === id);
+  // selectedBets.value = selectedBets.value.filter((bets) => bets.id !== id);
+
   eventDetail.value = {};
   // await getEvents({ name, feedId: feed });
-  await handleGameChange({ searchName: name, feedId: feed }, true);
-  expiredBets.value = selectedBets.value.filter((bets) => bets.id === id);
-  selectedBets.value = selectedBets.value.filter((bets) => bets.id !== id);
+  // await handleGameChange({ searchName: name, feedId: feed }, true);
+  try {
+    detailPending.value = true;
+    // e.value = null;
+    const results = {};
+
+    const res = await axios.post(`${url.url}/api/events`, {
+      name: name,
+      feedId: feed,
+    });
+    results[name] = res.data;
+
+    e.value = { ...e.value, ...results };
+    expiredBets.value = selectedBets.value.filter((bets) => bets.id === id);
+    selectedBets.value = selectedBets.value.filter((bets) => bets.id !== id);
+    detailPending.value = false;
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  }
 };
 
 const handleWinClicked = (bet) => {
@@ -1060,7 +1203,8 @@ onBeforeMount(async () => {
 
       <BasicGameInfo
         v-if="e"
-        :info="e"
+        :infoo="e"
+        :info="e[selectedGame] ? e[selectedGame] : {}"
         :isKeno="isKeno"
         :eventDetail="eventDetail"
         :imageDir="imageDir"
