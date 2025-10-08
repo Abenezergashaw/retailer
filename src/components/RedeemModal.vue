@@ -615,10 +615,7 @@ onBeforeUnmount(() => {
                 Clear
               </div>
               <div
-                @click="
-                  $emit('redeemTicket', ticketId);
-                  ticketId = '';
-                "
+                @click="$emit('redeemTicket', ticketId)"
                 class="font-roboto bg-[#37b34a] border border-[#37b34a] py-2 rounded flex justify-center items-center text-white cursor-pointer hover:bg-[#2B8C3A] px-4"
               >
                 Enter
@@ -725,7 +722,10 @@ onBeforeUnmount(() => {
                     : "Not a Winning Ticket"
                 }}
                 <button
-                  @click="$emit('proceedRedeemTicket', winners)"
+                  @click="
+                    $emit('proceedRedeemTicket', winners);
+                    ticketId = '';
+                  "
                   class="h-[34px] px-3 font-roboto flex justify-center items-center gap-2 cursor-pointer text-[.88em] rounded transition-colors text-white bg-[#37b34a] hover:bg-[#2B8C3A]"
                 >
                   Redeem
