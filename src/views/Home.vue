@@ -155,7 +155,7 @@ async function handleGameChange(game, isFinshed) {
     e.value[game.searchName] &&
     Object.keys(e.value[game.searchName]).length > 0
   ) {
-    console.log(game.feedId, "eesss", game.searchName);
+    // console.log(game.feedId, "eesss", game.searchName);
     // console.log("YESSSSSSSSS");
   } else {
     try {
@@ -167,7 +167,7 @@ async function handleGameChange(game, isFinshed) {
         name: game.searchName,
         feedId: game.feedId,
       });
-      console.log(game.feedId, "NOOOOO", game.searchName);
+      // console.log(game.feedId, "NOOOOO", game.searchName);
       results[game.searchName] = res.data;
 
       e.value = { ...e.value, ...results };
@@ -482,7 +482,7 @@ const handleWinClicked = (bet) => {
     selectedBets.value.push(bet);
   }
   trackingSelectedNumbers.value.push(bet.number);
-  console.log(selectedBets.value);
+  // console.log(selectedBets.value);
 };
 
 const handleComboClicked = (n, id, from) => {
@@ -585,7 +585,7 @@ const handleCombos = async (
     gameName,
   };
 
-  console.log(slip);
+  // console.log(slip);
 
   const exists = selectedBets.value.some(
     (b) => b.betType === slip.betType && b.name === slip.name
