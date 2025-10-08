@@ -52,16 +52,16 @@ async function loadAllEventsAtOnce(current = "PlatinumHounds") {
     { name: "DashingDerby", feedId: 12 },
     { name: "PlatinumHounds", feedId: 12 },
     { name: "SpeedSkating", feedId: 90 },
-    { name: "SteepleChase", feedId: 83 },
-    { name: "MotorRacing", feedId: 83 },
-    { name: "CycleRacing", feedId: 83 },
-    { name: "HarnessRacing", feedId: 83 },
+    { name: "SteepleChase", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "MotorRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "CycleRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    { name: "HarnessRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
     { name: "SingleSeaterMotorRacing", feedId: 83 },
-    { name: "SteepleChase", feedId: 90 },
-    { name: "MotorRacing", feedId: 90 },
-    { name: "CycleRacing", feedId: 90 },
-    { name: "HarnessRacing", feedId: 90 },
-    { name: "SingleSeaterMotorRacing", feedId: 90 },
+    // { name: "SteepleChase", feedId: 90 },
+    // { name: "MotorRacing", feedId: 90 },
+    // { name: "CycleRacing", feedId: 90 },
+    // { name: "HarnessRacing", feedId: 90 },
+    // { name: "SingleSeaterMotorRacing", feedId: 90 },
   ];
 
   const results = {};
@@ -414,17 +414,17 @@ const trackingSelectedNumbers = ref([]);
 async function fetchEventDetail(id, i) {
   try {
     detailPending.value = true;
-    if (
-      eventDetail.value[id] &&
-      Object.keys(eventDetail.value[id]).length > 0
-    ) {
-    } else {
-      const res = await axios.post(`${url.url}/api/eventDetail`, {
-        id: i,
-      });
+    // if (
+    //   eventDetail.value[id] &&
+    //   Object.keys(eventDetail.value[id]).length > 0
+    // ) {
+    // } else {
+    const res = await axios.post(`${url.url}/api/eventDetail`, {
+      id: i,
+    });
 
-      eventDetail.value[id] = res.data;
-    }
+    eventDetail.value[id] = res.data;
+    // }
 
     detailPending.value = false;
   } catch (error) {
