@@ -52,10 +52,26 @@ async function loadAllEventsAtOnce(current = "PlatinumHounds") {
     { name: "DashingDerby", feedId: 12 },
     { name: "PlatinumHounds", feedId: 12 },
     { name: "SpeedSkating", feedId: 90 },
-    { name: "SteepleChase", feedId: auth?.user?.source === 1 ? 83 : 90 },
-    { name: "MotorRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
-    { name: "CycleRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
-    { name: "HarnessRacing", feedId: auth?.user?.source === 1 ? 83 : 90 },
+    {
+      name: "SteepleChase",
+      feedId:
+        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
+    },
+    {
+      name: "MotorRacing",
+      feedId:
+        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
+    },
+    {
+      name: "CycleRacing",
+      feedId:
+        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
+    },
+    {
+      name: "HarnessRacing",
+      feedId:
+        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
+    },
     { name: "SingleSeaterMotorRacing", feedId: 83 },
     // { name: "SteepleChase", feedId: 90 },
     // { name: "MotorRacing", feedId: 90 },
