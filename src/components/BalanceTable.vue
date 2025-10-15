@@ -56,9 +56,12 @@ const selectedData = ref(null);
           <th class="px-4 py-2 text-left font-medium truncate">Redeemed</th>
           <th class="px-4 py-2 text-left font-medium truncate">Withdraws</th>
           <th class="px-4 py-2 text-left font-medium truncate">End Balance</th>
-          <!-- <th class="px-4 py-2 text-left font-medium truncate">
+          <th
+            class="px-4 py-2 text-left font-medium truncate"
+            v-if="auth?.user.createdBy == 'andualem'"
+          >
             Unclaimed Winnings
-          </th> -->
+          </th>
           <!-- <th class="px-4 py-2 text-left font-medium text-gray-700">
             Commission
           </th> -->
@@ -107,9 +110,12 @@ const selectedData = ref(null);
             Br.
             {{ (data.bets - data.cancellations - data.redeemed).toFixed(2) }}
           </td>
-          <!-- <td class="px-4 py-2 text-left truncate">
+          <td
+            class="px-4 py-2 text-left truncate"
+            v-if="auth?.user.createdBy == 'andualem'"
+          >
             Br. {{ data.unclaimed.toFixed(2) }}
-          </td> -->
+          </td>
         </tr>
       </tbody>
     </table>
