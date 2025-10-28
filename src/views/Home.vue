@@ -47,6 +47,10 @@ async function loadDefaultAtFirst() {
     console.error("Error fetching events:", error);
   }
 }
+function parseDate(str) {
+  return parseInt(str.replace(/[^0-9]/g, ""), 10);
+}
+
 async function loadAllEventsAtOnce(current = "PlatinumHounds") {
   const games = [
     { name: "DashingDerby", feedId: 12 },
@@ -85,25 +89,29 @@ async function loadAllEventsAtOnce(current = "PlatinumHounds") {
   // 🔥 Skip the current game
   const filteredGames = games.filter((game) => game.name !== current);
 
-  // Run all others in parallel
-  const promises = filteredGames.map(async (game) => {
-    const payload = { name: game.name, feedId: game.feedId };
+  filteredGames.forEach(async (f) => {
+    const leftGames = analyzeData(e.value[f.name]?.data?.Data);
+    if (leftGames < 3) {
+      try {
+        // detailPending.value = true;
+        // e.value = null;
+        const results = {};
 
-    try {
-      const res = await axios.post(`${url.url}/api/events`, payload);
-      // console.log(`✅ ${game.name} success`);
-      results[game.name] = res.data;
-    } catch (err) {
-      console.error(`❌ ${game.name} failed:`, err.message);
+        const res = await axios.post(`${url.url}/api/events`, {
+          name: f.name,
+          feedId: f.feedId,
+        });
+        results[f.name] = res.data;
+
+        e.value = { ...e.value, ...results };
+        // console.log("Nooooooooooo", e.value);
+
+        detailPending.value = false;
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
     }
   });
-
-  await Promise.all(promises);
-
-  // console.log("✅ All other games done");
-  // console.log(results);
-
-  e.value = { ...e.value, ...results };
 }
 
 async function getEvents(b) {
@@ -123,9 +131,9 @@ async function getEvents(b) {
 loadDefaultAtFirst();
 const betSlipICon = ref("PlatinumHounds");
 const selectedGame = ref("PlatinumHounds");
-setInterval(() => {
-  loadAllEventsAtOnce(selectedGame.value);
-}, 5000);
+// setInterval(() => {
+//   loadAllEventsAtOnce(selectedGame.value);
+// }, 5000);
 
 // getEvents({ name: "PlatinumHounds", feedId: 12 });
 
@@ -146,6 +154,7 @@ async function handleGameChange(game, isFinshed) {
   if (game.searchName === "PreRecRealDogs") return;
   betSlipICon.value = game.searchName;
   selectedGame.value = game.searchName;
+  loadAllEventsAtOnce(game.searchName);
 
   // if (isFinshed) {
   //   e.value = null;
@@ -177,6 +186,10 @@ async function handleGameChange(game, isFinshed) {
   ) {
     // console.log(game.feedId, "eesss", game.searchName);
     // console.log("YESSSSSSSSS");
+    detailPending.value = true;
+    setTimeout(() => {
+      detailPending.value = false;
+    }, 100);
   } else {
     try {
       detailPending.value = true;
@@ -584,20 +597,8 @@ const gamesList = computed(() => [
 const trackingSelectedNumbers = ref([]);
 
 async function fetchEventDetail(id, i) {
-  // try {
-  //   //detailPending.value = true;
-
-  //   const res = await axios.post(`${url.url}/api/eventDetail`, {
-  //     id: i,
-  //   });
-
-  //   eventDetail.value[id] = res.data;
-  //   //detailPending.value = false;
-  // } catch (error) {
-  //   console.error("Error fetching event detail:", error);
-  // }
   try {
-    detailPending.value = true;
+    // detailPending.value = true;
     // if (
     //   eventDetail.value[id] &&
     //   Object.keys(eventDetail.value[id]).length > 0
@@ -614,6 +615,35 @@ async function fetchEventDetail(id, i) {
   } catch (error) {
     console.error("Error fetching event detail:", error);
   }
+}
+
+function analyzeData(newData) {
+  if (!Array.isArray(newData)) return 0; // return 0 if invalid
+
+  const now = Date.now();
+  const sorted = [...newData].sort(
+    (a, b) => parseDate(a.AdjustedStartTime) - parseDate(b.AdjustedStartTime)
+  );
+
+  const past = sorted.filter((g) => parseDate(g.AdjustedFinishTime) < now);
+  const live = sorted.find((g) => {
+    const start = parseDate(g.AdjustedStartTime);
+    const end = parseDate(g.AdjustedFinishTime);
+    return start <= now && now <= end;
+  });
+  const future = sorted.filter((g) => parseDate(g.AdjustedStartTime) > now);
+
+  const lastPast = past.at(-1);
+  const next = future[0];
+
+  const filtered = [
+    ...(lastPast ? [lastPast] : []),
+    ...(live ? [live] : []),
+    ...future,
+  ];
+
+  // If you just want to know how many games are relevant
+  return filtered.length;
 }
 
 function handleGetEventDetail(id, i) {

@@ -351,7 +351,7 @@ function bgHelper(t) {
       formatted3 === t.name ||
       formatted4 === t.name ||
       formatted5 === t.name ||
-      formatted6 === bet.name
+      formatted6 === t.name
     ) {
       return 1;
     }

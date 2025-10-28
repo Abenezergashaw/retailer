@@ -1,6 +1,6 @@
 <script setup>
 import Plus from "./Plus.vue";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, nextTick } from "vue";
 import SingleRaceGameDisplay from "./SingleRaceGameDisplay.vue";
 import Countdown from "./Countdown.vue";
 
@@ -40,47 +40,106 @@ const localInfo = ref([]);
 
 const now = Date.now();
 
-localInfo.value = props.info?.data?.Data?.map((item, index, arr) => {
-  // if (!props.isKeno) {
-  const start = parseDate(item.AdjustedStartTime);
-  const finish = parseDate(item.AdjustedFinishTime);
+function analyzeData(newData) {
+  if (!Array.isArray(newData)) return;
 
-  // default values
-  let started = false;
-  let IsNext = item.IsNext || false;
-  let isExpanded = !!item.IsNext;
+  const now = Date.now();
+  const sorted = [...newData].sort(
+    (a, b) => parseDate(a.AdjustedStartTime) - parseDate(b.AdjustedStartTime)
+  );
 
-  // check if this game is currently started
-  if (now >= start && now <= finish + 10) {
-    console.log("Game started", item.EventId);
-    started = true;
-    IsNext = false;
-    isExpanded = false;
+  const past = sorted.filter((g) => parseDate(g.AdjustedFinishTime) < now);
+  const live = sorted.find((g) => {
+    const start = parseDate(g.AdjustedStartTime);
+    const end = parseDate(g.AdjustedFinishTime);
+    return start <= now && now <= end;
+  });
 
-    // make the NEXT item in the list the "next game"
-    const nextItem = arr[index + 1];
-    if (nextItem) {
-      arr[index + 1] = {
-        ...nextItem,
-        IsNext: true,
-        isExpanded: true,
-      };
-    }
+  const future = sorted.filter((g) => parseDate(g.AdjustedStartTime) > now);
+  const lastPast = past.at(-1);
+  const next = future[0];
+
+  // Instead of replacing whole array:
+  localInfo.value.length = 0; // clear
+  for (const g of [
+    ...(lastPast ? [lastPast] : []),
+    ...(live ? [live] : []),
+    ...future,
+  ]) {
+    const start = parseDate(g.AdjustedStartTime);
+    const flags = {
+      IsFinished: !!(
+        lastPast && start === parseDate(lastPast.AdjustedStartTime)
+      ),
+      started: !!(live && start === parseDate(live.AdjustedStartTime)),
+      IsNext: !!(next && start === parseDate(next.AdjustedStartTime)),
+    };
+    localInfo.value.push({ ...g, ...flags, isExpanded: flags.IsNext });
   }
-  if (now > finish) {
-    item.IsFinished = true;
-  }
+}
 
-  return {
-    ...item,
-    started,
-    IsNext,
-    isExpanded,
-  };
-  // } else {
-  //   localInfo.value = props.info.data.Data;
-  // }
-});
+watch(
+  () => props.info?.data?.Data,
+  (newData) => analyzeData(newData),
+  { immediate: true, deep: true }
+);
+
+watch(
+  () => localInfo.value,
+  (newVal) => {
+    newVal.forEach((item) => {
+      if (item.IsNext) {
+        onStartLoadEventDetail(item.EventId, item.ID);
+      }
+    });
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
+// localInfo.value = props.info?.data?.Data?.map((item, index, arr) => {
+//   // if (!props.isKeno) {
+//   const start = parseDate(item.AdjustedStartTime);
+//   const finish = parseDate(item.AdjustedFinishTime);
+
+//   // default values
+//   let started = false;
+//   let IsNext = item.IsNext || false;
+//   let isExpanded = !!item.IsNext;
+
+//   // check if this game is currently started
+//   if (now >= start && now <= finish + 10) {
+//     console.log("Game started", item.EventId);
+//     started = true;
+//     IsNext = false;
+//     isExpanded = false;
+
+//     // make the NEXT item in the list the "next game"
+//     const nextItem = arr[index + 1];
+//     if (nextItem) {
+//       arr[index + 1] = {
+//         ...nextItem,
+//         IsNext: true,
+//         isExpanded: true,
+//       };
+//     }
+//   }
+//   if (now > finish) {
+//     item.IsFinished = true;
+//   }
+
+//   return {
+//     ...item,
+//     started,
+//     IsNext,
+//     isExpanded,
+//   };
+//   // } else {
+//   //   localInfo.value = props.info.data.Data;
+//   // }
+// });
 
 // const localInfo = computed(() => {
 //   const now = Date.now(); // or however you're calculating it
@@ -133,74 +192,74 @@ localInfo.value = props.info?.data?.Data?.map((item, index, arr) => {
 
 // console.log("localInfo (raw):", localInfo.value);
 
-localInfo.value.forEach((item) => {
-  if (item.IsNext) {
-    onStartLoadEventDetail(item.EventId, item.ID);
-  }
-});
+// localInfo.value.forEach((item) => {
+//   if (item.IsNext) {
+//     onStartLoadEventDetail(item.EventId, item.ID);
+//   }
+// });
 
-watch(
-  () => props.info?.data?.Data,
-  (newVal) => {
-    const now = Date.now();
-    let startedIndex = -1;
-    // console.log("Changing");
-    // First pass: detect started game
-    if (!newVal) return;
+// watch(
+//   () => props.info?.data?.Data,
+//   (newVal) => {
+//     const now = Date.now();
+//     let startedIndex = -1;
+//     // console.log("Changing");
+//     // First pass: detect started game
+//     if (!newVal) return;
 
-    localInfo.value = newVal.map((item, index) => {
-      const start = parseDate(item.AdjustedStartTime);
-      const finish = parseDate(item.AdjustedFinishTime);
+//     localInfo.value = newVal.map((item, index) => {
+//       const start = parseDate(item.AdjustedStartTime);
+//       const finish = parseDate(item.AdjustedFinishTime);
 
-      // now > start ? console.log("Greater") : console.log("Lesser");
+//       // now > start ? console.log("Greater") : console.log("Lesser");
 
-      if (now >= finish + 600) {
-        // console.log("Game started", item.EventId);
-        // startedIndex = index;
-        return {
-          ...item,
-          IsFinished: true,
-          IsNext: false,
-          isExpanded: false,
-        };
-      }
+//       if (now >= finish + 600) {
+//         // console.log("Game started", item.EventId);
+//         // startedIndex = index;
+//         return {
+//           ...item,
+//           IsFinished: true,
+//           IsNext: false,
+//           isExpanded: false,
+//         };
+//       }
 
-      if (now >= start - 500 && now <= finish + 500) {
-        // console.log("Game started", item.EventId);
-        startedIndex = index;
-        return {
-          ...item,
-          started: true,
-          IsNext: false,
-          isExpanded: false,
-        };
-      }
+//       if (now >= start - 500 && now <= finish + 500) {
+//         // console.log("Game started", item.EventId);
+//         startedIndex = index;
+//         return {
+//           ...item,
+//           started: true,
+//           IsNext: false,
+//           isExpanded: false,
+//         };
+//       }
 
-      return {
-        ...item,
-        started: false,
-        IsNext: item.IsNext || false,
-        isExpanded: item.IsNext ? true : false,
-      };
-    });
+//       return {
+//         ...item,
+//         started: false,
+//         IsNext: item.IsNext || false,
+//         isExpanded: item.IsNext ? true : false,
+//       };
+//     });
 
-    // Second pass: promote next game if one started
-    if (startedIndex !== -1 && localInfo.value[startedIndex + 1]) {
-      localInfo.value[startedIndex + 1] = {
-        ...localInfo.value[startedIndex + 1],
-        IsNext: true,
-        isExpanded: true,
-      };
-    }
+//     // Second pass: promote next game if one started
+//     if (startedIndex !== -1 && localInfo.value[startedIndex + 1]) {
+//       localInfo.value[startedIndex + 1] = {
+//         ...localInfo.value[startedIndex + 1],
+//         IsNext: true,
+//         isExpanded: true,
+//       };
+//     }
 
-    localInfo.value.forEach((item) => {
-      if (item.IsNext) {
-        onStartLoadEventDetail(item.EventId, item.ID);
-      }
-    });
-  },
-  { immediate: true }
-);
+//     localInfo.value.forEach((item) => {
+//       if (item.IsNext) {
+//         onStartLoadEventDetail(item.EventId, item.ID);
+//       }
+//     });
+//   },
+//   { immediate: true }
+// );
 
 function passSelectedBet(
   id,
@@ -235,7 +294,12 @@ function onStartLoadEventDetail(id, i) {
 }
 
 function handleFinish(id, feed, name) {
-  emit("finished", id, feed, name);
+  // emit("finished", id, feed, name);
+  nextTick(() => {
+    setTimeout(() => {
+      analyzeData(props.info?.data?.Data);
+    }, 1000);
+  });
 }
 
 function handleToggle(id, i) {
