@@ -1,6 +1,6 @@
 <script setup>
 import Plus from "./Plus.vue";
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, computed, watch, nextTick, onMounted } from "vue";
 import SingleRaceGameDisplay from "./SingleRaceGameDisplay.vue";
 import Countdown from "./Countdown.vue";
 
@@ -337,6 +337,13 @@ function passCombos(
     gameId
   );
 }
+
+onMounted(() => {
+  document.addEventListener(
+    "visibilitychange",
+    analyzeData(props.info?.data?.Data)
+  );
+});
 </script>
 <template>
   <div
