@@ -69,15 +69,15 @@ const props = defineProps({
 const emit = defineEmits(["finished"]);
 
 const now = ref(Date.now());
-let intervalId = null;
+let rafId = null;
 
 const updateNow = () => {
   now.value = Date.now();
 };
 
-const diffInSeconds = computed(() => {
-  return Math.max(0, Math.floor((props.timestamp - now.value) / 1000));
-});
+const diffInSeconds = computed(() =>
+  Math.max(0, Math.floor((props.timestamp - now.value) / 1000))
+);
 
 const formattedCountdown = computed(() => {
   const minutes = Math.floor(diffInSeconds.value / 60);
@@ -92,24 +92,36 @@ const isFinished = computed(() => diffInSeconds.value <= 0);
 watch(isFinished, (finished) => {
   if (finished) {
     emit("finished");
-    if (intervalId) clearInterval(intervalId);
+    if (rafId) cancelAnimationFrame(rafId);
   }
 });
 
 const handleVisibilityChange = () => {
   if (!document.hidden) {
-    // When the tab becomes active again, recalculate immediately
+    // Force immediate update on tab becoming visible
     updateNow();
+    // Resume ticking if not finished
+    if (!isFinished.value) tick();
+  } else {
+    // Pause animation while hidden to save resources
+    if (rafId) cancelAnimationFrame(rafId);
+  }
+};
+
+const tick = () => {
+  updateNow();
+  if (!isFinished.value) {
+    rafId = requestAnimationFrame(tick);
   }
 };
 
 onMounted(() => {
   document.addEventListener("visibilitychange", handleVisibilityChange);
-  intervalId = setInterval(updateNow, 1000);
+  tick(); // Start the animation loop
 });
 
 onUnmounted(() => {
-  if (intervalId) clearInterval(intervalId);
+  if (rafId) cancelAnimationFrame(rafId);
   document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 </script>

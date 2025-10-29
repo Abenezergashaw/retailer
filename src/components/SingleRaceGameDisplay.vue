@@ -1560,6 +1560,8 @@ const handleComboButtonClicked = (type) => {
                 eventDetail.Event.TypeName === 'CycleRacing' ||
                 eventDetail.Event.TypeName === 'SingleSeaterMotorRacing'
                   ? imageDir[d.Draw - 1]
+                  : eventDetail.Event.TypeName === 'SpeedSkating'
+                  ? imageDir[Math.floor(Math.random() * 8) + 1]
                   : imageDir[d.SilkNumber - 1]
               }`"
               class="w-[32px] h-[32px] object-contain mx-auto"
@@ -1808,6 +1810,8 @@ const handleComboButtonClicked = (type) => {
                 eventDetail.Event.TypeName === 'CycleRacing' ||
                 eventDetail.Event.TypeName === 'SingleSeaterMotorRacing'
                   ? imageDir[d.Draw - 1]
+                  : eventDetail.Event.TypeName === 'SpeedSkating'
+                  ? imageDir[Math.floor(Math.random() * 8) + 1]
                   : imageDir[d.SilkNumber - 1]
               }`"
               class="w-[32px] h-[32px] object-contain mx-auto"
