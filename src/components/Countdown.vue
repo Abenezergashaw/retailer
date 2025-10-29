@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
 const props = defineProps({
@@ -43,6 +43,74 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (intervalId) clearInterval(intervalId);
+});
+</script>
+
+<template>
+  <span
+    class="bg-[#FFFF00] text-black text-[.7em] w-full flex justify-center items-center font-roboto tracking-widest rounded-tr-sm rounded-br-sm shadow-sm shadow-gray-700"
+  >
+    {{
+      isFinished ? "00:00" : diffInSeconds > 3600 ? "60+" : formattedCountdown
+    }}
+  </span>
+</template> -->
+
+<script setup>
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+
+const props = defineProps({
+  timestamp: {
+    type: Number,
+    required: true,
+  },
+});
+
+const emit = defineEmits(["finished"]);
+
+const now = ref(Date.now());
+let intervalId = null;
+
+const updateNow = () => {
+  now.value = Date.now();
+};
+
+const diffInSeconds = computed(() => {
+  return Math.max(0, Math.floor((props.timestamp - now.value) / 1000));
+});
+
+const formattedCountdown = computed(() => {
+  const minutes = Math.floor(diffInSeconds.value / 60);
+  const seconds = diffInSeconds.value % 60;
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+});
+
+const isFinished = computed(() => diffInSeconds.value <= 0);
+
+watch(isFinished, (finished) => {
+  if (finished) {
+    emit("finished");
+    if (intervalId) clearInterval(intervalId);
+  }
+});
+
+const handleVisibilityChange = () => {
+  if (!document.hidden) {
+    // When the tab becomes active again, recalculate immediately
+    updateNow();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+  intervalId = setInterval(updateNow, 1000);
+});
+
+onUnmounted(() => {
+  if (intervalId) clearInterval(intervalId);
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 </script>
 
