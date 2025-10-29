@@ -92,21 +92,9 @@ const isFinished = computed(() => diffInSeconds.value <= 0);
 watch(isFinished, (finished) => {
   if (finished) {
     emit("finished");
-    if (rafId) cancelAnimationFrame(rafId);
+    cancelAnimationFrame(rafId);
   }
 });
-
-const handleVisibilityChange = () => {
-  if (!document.hidden) {
-    // Force immediate update on tab becoming visible
-    updateNow();
-    // Resume ticking if not finished
-    if (!isFinished.value) tick();
-  } else {
-    // Pause animation while hidden to save resources
-    if (rafId) cancelAnimationFrame(rafId);
-  }
-};
 
 const tick = () => {
   updateNow();
@@ -115,13 +103,25 @@ const tick = () => {
   }
 };
 
+const handleVisibilityChange = () => {
+  if (!document.hidden) {
+    // When tab is active again: refresh immediately and RESTART loop
+    updateNow();
+    cancelAnimationFrame(rafId); // clear any old frame just in case
+    if (!isFinished.value) tick(); // restart the loop
+  } else {
+    // Optionally cancel while hidden
+    cancelAnimationFrame(rafId);
+  }
+};
+
 onMounted(() => {
   document.addEventListener("visibilitychange", handleVisibilityChange);
-  tick(); // Start the animation loop
+  tick(); // start loop
 });
 
 onUnmounted(() => {
-  if (rafId) cancelAnimationFrame(rafId);
+  cancelAnimationFrame(rafId);
   document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 </script>
