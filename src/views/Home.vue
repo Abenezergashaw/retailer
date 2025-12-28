@@ -1248,7 +1248,7 @@ onBeforeMount(async () => {
     <!-- Modal Box -->
     <div class="w-[100vw] h-[100vw] flex justify-center items-center">
       <div class="text-[#40BB53]">
-        Please adjust time and date in ypur local time settings.
+        Please adjust time and date in your local time settings.
       </div>
     </div>
   </div>
