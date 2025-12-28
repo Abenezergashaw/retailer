@@ -29,17 +29,17 @@ const showModal = ref(false);
 const e = ref(null);
 const detailPending = ref(false);
 
-async function loadDefaultAtFirst() {
+async function loadDefaultAtFirst(a = "PlatinumHounds", f = 12) {
   try {
     detailPending.value = true;
     // e.value = null;
     const results = {};
 
     const res = await axios.post(`${url.url}/api/events`, {
-      name: "PlatinumHounds",
-      feedId: 12,
+      name: a,
+      feedId: f,
     });
-    results["PlatinumHounds"] = res.data;
+    results[a] = res.data;
 
     e.value = { ...e.value, ...results };
     detailPending.value = false;
@@ -55,33 +55,12 @@ async function loadAllEventsAtOnce(current = "PlatinumHounds") {
   const games = [
     { name: "DashingDerby", feedId: 12 },
     { name: "PlatinumHounds", feedId: 12 },
-    { name: "SpeedSkating", feedId: 90 },
-    {
-      name: "SteepleChase",
-      feedId:
-        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
-    },
-    {
-      name: "MotorRacing",
-      feedId:
-        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
-    },
-    {
-      name: "CycleRacing",
-      feedId:
-        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
-    },
-    {
-      name: "HarnessRacing",
-      feedId:
-        auth?.user?.source === 1 ? 83 : auth?.user?.source === 2 ? 90 : 226,
-    },
-    { name: "SingleSeaterMotorRacing", feedId: 83 },
-    // { name: "SteepleChase", feedId: 90 },
-    // { name: "MotorRacing", feedId: 90 },
-    // { name: "CycleRacing", feedId: 90 },
-    // { name: "HarnessRacing", feedId: 90 },
-    // { name: "SingleSeaterMotorRacing", feedId: 90 },
+    { name: "SpeedSkating", feedId: 8080 },
+    { name: "SteepleChase", feedId: 8080 },
+    { name: "MotorRacing", feedId: 8080 },
+    { name: "CycleRacing", feedId: 8080 },
+    { name: "HarnessRacing", feedId: 8080 },
+    { name: "SingleSeaterMotorRacing", feedId: 8080 },
   ];
 
   const results = {};
@@ -91,7 +70,7 @@ async function loadAllEventsAtOnce(current = "PlatinumHounds") {
 
   filteredGames.forEach(async (f) => {
     const leftGames = analyzeData(e.value[f.name]?.data?.Data);
-    if (leftGames < 3) {
+    if (leftGames < 4) {
       try {
         // detailPending.value = true;
         // e.value = null;
@@ -294,7 +273,7 @@ const gamesList = computed(() => [
   {
     name: "skating",
     searchName: "SpeedSkating",
-    feedId: 90,
+    feedId: 8080,
     display: "SPEED SKATING",
     display2: "",
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.53 51.97" data-svg-id="SpeedSkatingSVG" class="icon fill-[#8c8c8c] hover:fill-[#37B34A] " alt="SpeedSkating" src="/Content/Images/Icons/SpeedSkatingIcon.svg">
@@ -304,7 +283,7 @@ const gamesList = computed(() => [
   {
     name: "horseJump",
     searchName: "SteepleChase",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
     display: "STEEPLE CHASE RACING",
     display2: "JUMPS",
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.22 41.92" data-svg-id="SteepleChaseSVG" class="icon fill-[#8c8c8c] hover:fill-[#37B34A] " alt="SteepleChase" src="/Content/Images/Icons/SteepleChaseIcon.svg"><path class="cls-1" d="M9.14,26.33a9.51,9.51,0,0,0-.88-.82c-.08-.06-.36,0-.46.13a12.21,12.21,0,0,0-1,1.12c-.55.72-1.08,1.45-1.61,2.17l-.09-.17-.41.66a15.19,15.19,0,0,1,2.06-4.64l-.19-.14c-.11.06-.27.08-.33.17a3.7,3.7,0,0,0-.46.77,13.11,13.11,0,0,1-2.25,3.89,3.52,3.52,0,0,1-1.91,1.22A2.21,2.21,0,0,1,0,30.39,3,3,0,0,0,3,29.3a12,12,0,0,0,2.32-4,.71.71,0,0,0,0-.5,17.3,17.3,0,0,0-2.06,3,19.83,19.83,0,0,1,2-4.47A12.46,12.46,0,0,1,8,20a6.9,6.9,0,0,1,4.9-1.62.88.88,0,0,0,.72-.27A9.48,9.48,0,0,1,17.84,16l3.1-.82c.15,0,.29-.1.38-.13a11.54,11.54,0,0,1-1.21-.58.93.93,0,0,1-.39-.57c0-.09.31-.24.55-.42a3.13,3.13,0,0,0-.41-.42c-.3-.22-.33-.45,0-.6a1,1,0,0,1,.75,0,2.67,2.67,0,0,0,2.35.17c.3-.13.64-.17,1-.27.1,0,.26-.13.26-.2a.51.51,0,0,0-.17-.33,3.2,3.2,0,0,0-.38-.23,20,20,0,0,1-1.93-1.4,2.15,2.15,0,0,1-.56-2.52c.14-.37.3-.74-.05-1.13-.19-.21-.08-.46.21-.62a7.84,7.84,0,0,0,1.17-.79,2,2,0,0,1,1.91-.51.75.75,0,0,0,.4,0l5.89-1.75a1.33,1.33,0,0,0,.19-.09c0-1.65.53-2.45,1.79-2.69s2,.24,2.57,1.76L36,1.64l.06.08a2.88,2.88,0,0,1-.24.31,3.9,3.9,0,0,1-.62.57c-.48.3-.36.69-.23,1.09a.83.83,0,0,1,0,.14,12.17,12.17,0,0,0-.82,1.25c-.19.38-.41.36-.72.22s-.57-.1-.61.34a1.81,1.81,0,0,1-.15.75,1.41,1.41,0,0,0,.1,1.44c2.07-.77,4.32-.95,6.29-2a7,7,0,0,1,5.66-.44,1.59,1.59,0,0,0,1.93-.58,5.72,5.72,0,0,1,.53-.51l.16.12a10.67,10.67,0,0,1-.49,1.12A1,1,0,0,0,47,6.7a16.72,16.72,0,0,1,2.23,4.47,16.67,16.67,0,0,0,.8,1.66,1.86,1.86,0,0,1,.13,1.45,1.23,1.23,0,0,1-1.49.86A4.32,4.32,0,0,1,48,15c-.14-.05-.33-.17-.35-.28-.09-.51-.48-.74-.85-1-.75-.53-1.51-1-2.23-1.62a5.13,5.13,0,0,1-.6-.81c-.15-.18-.32-.42-.52-.47a3.68,3.68,0,0,0-3.58,1.25,4.9,4.9,0,0,0-.67,1,1.42,1.42,0,0,0-.11,1.3,1.8,1.8,0,0,1,0,1.49c-.18.39,0,.7.45.73a5.65,5.65,0,0,0,1.25-.06c1.13-.17,1.43,0,1.71,1.1A2.7,2.7,0,0,1,42.08,20a1.85,1.85,0,0,0-.26.76c-.13.69-.25,1.39-.36,2.09a.9.9,0,0,1-.79.84,3.12,3.12,0,0,0-1.59.78,2,2,0,0,1-1.27.23c-.32,0-.47-.52-.29-1,.12-.28.37-.51.52-.78a1.16,1.16,0,0,0,.17-.63,1,1,0,0,1,.38-.91.64.64,0,0,1,.79-.08,1.64,1.64,0,0,0,.38.14c.46.11.57,0,.61-.48a4.72,4.72,0,0,1,.28-.87c.07-.23.21-.54.11-.69a.75.75,0,0,0-.66-.23,7.85,7.85,0,0,0-2.51.81,18.84,18.84,0,0,1-6.52,2.56,26.9,26.9,0,0,1-7.34.83c-.54,0-1.08-.08-1.62-.08a1.94,1.94,0,0,0-2,1.6.86.86,0,0,0,0,.13,4.11,4.11,0,0,1-1.84,3,57.58,57.58,0,0,0-4.31,4.05A6.27,6.27,0,0,0,13,33.53a1.93,1.93,0,0,0-.1,1.7,2.5,2.5,0,0,1,0,1.85,6.3,6.3,0,0,0-.15,1.09,2.92,2.92,0,0,1-.2.66A8.24,8.24,0,0,0,12,40a3.64,3.64,0,0,1-1.21,1.81c-.29.26-.55.18-.67-.16a12,12,0,0,1-.38-1.34.47.47,0,0,1,.08-.33c.14-.2.06-.33,0-.55a1.9,1.9,0,0,1,.19-1.65,1.88,1.88,0,0,1,.44-.57,2.64,2.64,0,0,0,.84-2.86c-.31-1.46-.59-2.92-.88-4.39-.13-.66,0-.9.64-1.13a6,6,0,0,1,.87-.24,3.1,3.1,0,0,0,1.73-1.15,1,1,0,0,0,.14-1.11c-.22-.54-.49-1.07-.71-1.61s-.54-1.33-.79-2c-.11-.31-.28-.43-.61-.35a2.68,2.68,0,0,0-2.05,3A1,1,0,0,1,9.14,26.33ZM30.65,9a5.2,5.2,0,0,0-2.75.35.39.39,0,0,0-.13.64c.2.27.42.54.64.82Z"></path><path class="cls-1" d="M39.12,27.57h6.43a5.67,5.67,0,0,1,5.67,5.67v8.68a0,0,0,0,1,0,0H33.45a0,0,0,0,1,0,0V33.24a5.67,5.67,0,0,1,5.67-5.67Z"></path></svg>`,
@@ -384,7 +363,7 @@ const gamesList = computed(() => [
   {
     name: "car",
     searchName: "MotorRacing",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
     display: "MOTOR RACING",
     display2: "MAXCAR",
     svg: `<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 100 35.8" style="enable-background:new 0 0 100 35.8;" xml:space="preserve" data-svg-id="MotorRacingSVG" class="icon fill-[#8c8c8c] hover:fill-[#37B34A]  alt="MotorRacing" src="/Content/Images/Icons/MotorRacingIcon.svg">
@@ -399,7 +378,7 @@ const gamesList = computed(() => [
   {
     name: "cycle",
     searchName: "CycleRacing",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
 
     display: "TRACK RACING",
     display2: "SLIP STREAM",
@@ -415,7 +394,7 @@ const gamesList = computed(() => [
   {
     name: "horseGari",
     searchName: "HarnessRacing",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
 
     display: "HARNESS RACING",
     display2: "CHARGING CHARIOTS",
@@ -427,7 +406,7 @@ const gamesList = computed(() => [
   {
     name: "f1",
     searchName: "SingleSeaterMotorRacing",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
 
     display: "SS MOTOR RACING",
     display2: "DRIVE",
@@ -483,7 +462,7 @@ const gamesList = computed(() => [
   {
     name: "PreRecRealDogs",
     searchName: "PreRecRealDogs",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
 
     display: "GREYHOUND RACING",
     display2: "PLATINUM HOUNDS",
@@ -539,7 +518,7 @@ const gamesList = computed(() => [
   {
     name: "SpinAndWin",
     searchName: "SpinAndWin",
-    feedId: auth?.user?.source === 1 ? 83 : 90,
+    feedId: auth?.user?.source === 1 ? 8080 : 90,
 
     display: "GREYHOUND RACING",
     display2: "PLATINUM HOUNDS",
@@ -680,6 +659,8 @@ const handleFinish = async (id, feed, name) => {
   } catch (error) {
     console.error("Error fetching events:", error);
   }
+
+  // loadAllEventsAtOnce(name);
 };
 
 const handleWinClicked = (bet) => {
@@ -781,7 +762,7 @@ const handleCombos = async (
       FeedEventId: Id,
       EventTypeValue: eventValue,
       MarketClassValue: marketValue,
-      MarketClassName: "type",
+      MarketClassName: typeToSend,
       SelectionIds: selection,
     },
   ]);
@@ -905,13 +886,13 @@ async function handlePlaceBet() {
     }
   );
 
-  if (res.data.expired) {
-    router.push({
-      path: "/RetailUser/Login",
-      query: { msg: res.data.message },
-    });
-    return;
-  }
+  // if (!res.data.loggedIn) {
+  //   router.push({
+  //     path: "/RetailUser/Login",
+  //     query: { msg: res.data.message },
+  //   });
+  //   return;
+  // }
 
   if (res.data.limited) {
     selectedBets.value = [];
@@ -1207,6 +1188,20 @@ async function checkSession() {
 function handleLogout() {
   auth.logout();
 }
+const timeMismatch = ref(false);
+
+async function getTimeOffset() {
+  const res = await axios.get(`${url.url}/api/timeOffset`);
+  const now = Number(`/Date(${Date.now()})/`.match(/\d+/)[0]);
+  const server = Number(res.data.match(/\d+/)[0]);
+
+  console.log(now, server);
+  if (now > server + 1500 || now < server - 1500) {
+    timeMismatch.value = true;
+  }
+}
+
+getTimeOffset();
 
 onBeforeMount(async () => {
   await checkPrinterIsOnline();
@@ -1243,6 +1238,18 @@ onBeforeMount(async () => {
         class="w-14 h-14 rounded-full border-[6px] animate-spin"
         style="border-color: #37b34a; border-top-color: #a1e2ab"
       ></div>
+    </div>
+  </div>
+
+  <div
+    v-if="timeMismatch"
+    class="fixed inset-0 bg-white bg-opacity-100 flex items-center justify-center z-20"
+  >
+    <!-- Modal Box -->
+    <div class="w-[100vw] h-[100vw] flex justify-center items-center">
+      <div class="text-[#40BB53]">
+        Please adjust time and date in ypur local time settings.
+      </div>
     </div>
   </div>
 

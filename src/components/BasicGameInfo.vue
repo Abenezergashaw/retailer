@@ -37,8 +37,9 @@ watch(
 );
 
 const localInfo = ref([]);
+const timestamp = ref(null);
 
-const now = Date.now();
+// const now = Date.now();
 
 function analyzeData(newData) {
   if (!Array.isArray(newData)) return;
@@ -76,6 +77,13 @@ function analyzeData(newData) {
     };
     localInfo.value.push({ ...g, ...flags, isExpanded: flags.IsNext });
   }
+
+  localInfo.value.forEach((item) => {
+    if (item.IsNext) {
+      timestamp.value = item.AdjustedStartTime.match(/\d+/)[0];
+      console.log("Timestamp: ", timestamp.value);
+    }
+  });
 }
 
 watch(
@@ -368,6 +376,11 @@ onMounted(() => {
             :timestamp="parseInt(i.AdjustedStartTime.match(/\d+/)[0])"
             @finished="handleFinish(i.EventId, i.FeedId, i.TypeName)"
           />
+          <!-- <Countdown
+            v-if="i.IsNext"
+            :timestamp="timestamp"
+            @finished="handleFinish(i.EventId, i.FeedId, i.TypeName)"
+          /> -->
           <div
             v-if="i.started"
             class="bg-[#B5280C] text-white text-[.65em] w-full flex justify-center items-center font-bold tracking-widest rounded-tr-sm rounded-br-sm"

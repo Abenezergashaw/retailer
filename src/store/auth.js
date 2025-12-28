@@ -20,10 +20,10 @@ export const useAuthStore = defineStore("auth", {
 
         if (res.data.expired) {
           // console.log("expired");
-          router.push({
-            path: "/RetailUser/Login",
-            query: { msg: res.data.message },
-          });
+          // router.push({
+          //   path: "/RetailUser/Login",
+          //   query: { msg: res.data.message },
+          // });
           return;
         }
 

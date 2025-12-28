@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
 const props = defineProps({
@@ -12,6 +12,19 @@ const emit = defineEmits(["finished"]);
 
 const now = ref(Date.now());
 let intervalId = null;
+
+watch(
+  () => props.timestamp,
+  (newVal, oldVal) => {
+    // console.log("timestamp changed", newVal, newVal > now.value);
+    if (intervalId) clearInterval(intervalId);
+    // now.value = Date.now()
+
+    intervalId = setInterval(() => {
+      now.value = Date.now();
+    }, 1000);
+  }
+);
 
 const diffInSeconds = computed(() => {
   return Math.max(0, Math.floor((props.timestamp - now.value) / 1000));
@@ -54,9 +67,9 @@ onUnmounted(() => {
       isFinished ? "00:00" : diffInSeconds > 3600 ? "60+" : formattedCountdown
     }}
   </span>
-</template> -->
+</template>
 
-<script setup>
+<!-- <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
 const props = defineProps({
@@ -124,9 +137,9 @@ onUnmounted(() => {
   cancelAnimationFrame(rafId);
   document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
-</script>
+</script> -->
 
-<template>
+<!-- <template>
   <span
     class="bg-[#FFFF00] text-black text-[.7em] w-full flex justify-center items-center font-roboto tracking-widest rounded-tr-sm rounded-br-sm shadow-sm shadow-gray-700"
   >
@@ -134,4 +147,4 @@ onUnmounted(() => {
       isFinished ? "00:00" : diffInSeconds > 3600 ? "60+" : formattedCountdown
     }}
   </span>
-</template>
+</template> -->
