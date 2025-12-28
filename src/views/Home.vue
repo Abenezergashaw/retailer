@@ -1201,7 +1201,7 @@ async function getTimeOffset() {
   }
 }
 
-// getTimeOffset();
+getTimeOffset();
 
 onBeforeMount(async () => {
   await checkPrinterIsOnline();
