@@ -131,6 +131,8 @@ async function handleGameChange(game, isFinshed) {
   if (game.searchName === "FootballGroup") return;
   if (game.searchName === "SpinAndWin") return;
   if (game.searchName === "PreRecRealDogs") return;
+  if (game.searchName === "SingleSeaterMotorRacing") return;
+  if (game.searchName === "SpeedSkating") return;
   betSlipICon.value = game.searchName;
   selectedGame.value = game.searchName;
   loadAllEventsAtOnce(game.searchName);
