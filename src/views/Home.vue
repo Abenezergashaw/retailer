@@ -135,7 +135,7 @@ async function handleGameChange(game, isFinshed) {
   if (game.searchName === "SpeedSkating") return;
   betSlipICon.value = game.searchName;
   selectedGame.value = game.searchName;
-  loadAllEventsAtOnce(game.searchName);
+  // loadAllEventsAtOnce(game.searchName);
 
   // if (isFinshed) {
   //   e.value = null;
@@ -161,37 +161,37 @@ async function handleGameChange(game, isFinshed) {
   //   }
   // }
 
-  if (
-    e.value[game.searchName] &&
-    Object.keys(e.value[game.searchName]).length > 0
-  ) {
-    // console.log(game.feedId, "eesss", game.searchName);
-    // console.log("YESSSSSSSSS");
+  // if (
+  //   e.value[game.searchName] &&
+  //   Object.keys(e.value[game.searchName]).length > 0
+  // ) {
+  //   // console.log(game.feedId, "eesss", game.searchName);
+  //   // console.log("YESSSSSSSSS");
+  //   detailPending.value = true;
+  //   setTimeout(() => {
+  //     detailPending.value = false;
+  //   }, 100);
+  // } else {
+  try {
     detailPending.value = true;
-    setTimeout(() => {
-      detailPending.value = false;
-    }, 100);
-  } else {
-    try {
-      detailPending.value = true;
-      // e.value = null;
-      const results = {};
+    // e.value = null;
+    const results = {};
 
-      const res = await axios.post(`${url.url}/api/events`, {
-        name: game.searchName,
-        feedId: game.feedId,
-      });
-      // console.log(game.feedId, "NOOOOO", game.searchName);
-      results[game.searchName] = res.data;
+    const res = await axios.post(`${url.url}/api/events`, {
+      name: game.searchName,
+      feedId: game.feedId,
+    });
+    // console.log(game.feedId, "NOOOOO", game.searchName);
+    results[game.searchName] = res.data;
 
-      e.value = { ...e.value, ...results };
-      // console.log("Nooooooooooo", e.value);
+    e.value = { ...e.value, ...results };
+    // console.log("Nooooooooooo", e.value);
 
-      detailPending.value = false;
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    }
+    detailPending.value = false;
+  } catch (error) {
+    console.error("Error fetching events:", error);
   }
+  // }
 
   detailPending.value = true;
   setTimeout(() => {
