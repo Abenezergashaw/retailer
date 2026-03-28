@@ -756,12 +756,20 @@ const handleCombos = async (
 ) => {
   betPlacedSuccess.value = false;
 
+  let i = Id;
+  if (gameName === "PlatinumHounds" || gameName === "DashingDerby") {
+    i = Id;
+  } else {
+    i = "8081-" + i;
+  }
+  console.log(i);
+
   detailPending.value = true;
   const selection = comboHelper(typeToSend, eventId);
   const res = await axios.post(`${url.url}/api/combo`, [
     {
       ID: 3,
-      FeedEventId: Id,
+      FeedEventId: i,
       EventTypeValue: eventValue,
       MarketClassValue: marketValue,
       MarketClassName: typeToSend,
