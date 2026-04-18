@@ -136,7 +136,7 @@ watch(
         inputRef.value?.focus();
       }, 400);
     }
-  }
+  },
 );
 
 function startDrag(e) {
@@ -203,7 +203,8 @@ function getCurrentDateTime() {
 }
 
 function appendDigit(digit) {
-  if (!digit) {
+  console.log(digit);
+  if (digit === null || digit === undefined || digit === "") {
     ticketId.value = ticketId.value.slice(0, -1);
     return;
   }
